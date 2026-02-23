@@ -18,9 +18,6 @@ services:
       # The two next lines can be removed after initial installation
       SYMFONY_VERSION: ${SYMFONY_VERSION:-}
       STABILITY: ${STABILITY:-stable}
-    env_file:
-      - .env
-      - .env.local
     volumes:
       - caddy_data:/data
       - caddy_config:/config

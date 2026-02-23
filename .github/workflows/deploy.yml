@@ -1,0 +1,97 @@
+name: Deploy Server
+
+# Only run the workflow when a PR is merged on main and closed
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+
+# Here we check that the PR was correctly merged to main
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clear directory
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            rm -rf ${{ secrets.TARGET_DIR }}/ecobattle/*
+
+      - name: Copy repository contents to vps via scp
+        uses: appleboy/scp-action@v0.1.4 # Latest in date when creating the workflow
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: ${{ secrets.TARGET_DIR }}/ecobattle # Need to create it first on the VPS
+
+      - name: Build site and copy it
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ${{ secrets.TARGET_DIR }}/ecobattle
+            cp ${{ secrets.TARGET_DIR }}/.env.local .env.local
+            docker compose build -f compose.yaml -f compose.prod.yaml
+            docker compose up -d -f compose.yaml -f compose.prod.yaml
+
+
+      - name: Check ecobattle container
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            if docker ps | grep ecobattle; then
+              echo 'Container is running'
+            else
+              echo 'Container is not running'
+              exit 1 # This mark the pipeline as failed
+            fi
+      
+      - name: Composer require installation
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ${{ secrets.TARGET_DIR }}/ecobattle
+            composer require Symfony/orm-pack
+            composer require easycorp/easyadmin-bundle
+            composer require symfony/webapp-pack
+            composer require api
+            docker compose down
+            docker compose up -d -f compose.yaml -f compose.prod.yaml
+
+      - name: Check ecobattle container
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            if docker ps | grep ecobattle; then
+              echo 'Container is running'
+            else
+              echo 'Container is not running'
+              exit 1 # This mark the pipeline as failed
+            fi

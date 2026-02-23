@@ -49,7 +49,7 @@ jobs:
             docker stop ecobattle || true # Stop the container if it is already running, otherwise the build will fail because of locked files
             docker rm ecobattle || true # Remove the container if it is already running, otherwise the build will fail because of locked files
             docker compose -f compose.yaml -f compose.prod.yaml build --pull --no-cache
-            docker compose up -d -f compose.yaml -f compose.prod.yaml
+            docker compose -f compose.yaml -f compose.prod.yaml up -d 
 
       - name: Check ecobattle container
         uses: appleboy/ssh-action@v1.0.0
@@ -80,7 +80,7 @@ jobs:
             docker exec -t ecobattle composer require symfony/webapp-pack
             docker exec -t ecobattle composer require api
             docker stop ecobattle
-            docker compose up -d -f compose.yaml -f compose.prod.yaml
+            docker compose -f compose.yaml -f compose.prod.yaml up -d
 
       - name: Check ecobattle container
         uses: appleboy/ssh-action@v1.0.0

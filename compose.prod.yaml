@@ -13,7 +13,6 @@ services:
       - default
       - nginx
     env_file:
-      - .env
       - .env.local
   
 networks:

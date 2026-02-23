@@ -6,6 +6,8 @@ services:
       context: .
       target: frankenphp_prod
     environment:
+      SERVER_NAME: ecobattle.atelierducube.fr:80, php:80
+      DEFAULT_URI: http://ecobattle.atelierducube.fr
       APP_SECRET: ${APP_SECRET}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}

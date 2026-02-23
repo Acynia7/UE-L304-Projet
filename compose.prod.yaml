@@ -12,6 +12,8 @@ services:
     networks:
       - default
       - nginx
+    env_file:
+      - .env.local
   
 networks:
   nginx:

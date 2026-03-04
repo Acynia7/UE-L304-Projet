@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DefiRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,17 @@ class Defi
     #[ORM\ManyToOne(inversedBy: 'defis')]
     #[ORM\JoinColumn(nullable: false)]
     private ?DefiDifficulte $difficulte = null;
+
+    /**
+     * @var Collection<int, Preuve>
+     */
+    #[ORM\OneToMany(targetEntity: Preuve::class, mappedBy: 'defi')]
+    private Collection $preuves;
+
+    public function __construct()
+    {
+        $this->preuves = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +134,36 @@ class Defi
     public function setDifficulte(?DefiDifficulte $difficulte): static
     {
         $this->difficulte = $difficulte;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Preuve>
+     */
+    public function getPreuves(): Collection
+    {
+        return $this->preuves;
+    }
+
+    public function addPreufe(Preuve $preufe): static
+    {
+        if (!$this->preuves->contains($preufe)) {
+            $this->preuves->add($preufe);
+            $preufe->setDefi($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreufe(Preuve $preufe): static
+    {
+        if ($this->preuves->removeElement($preufe)) {
+            // set the owning side to null (unless already changed)
+            if ($preufe->getDefi() === $this) {
+                $preufe->setDefi(null);
+            }
+        }
 
         return $this;
     }

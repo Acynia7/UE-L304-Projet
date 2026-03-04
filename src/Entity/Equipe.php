@@ -33,9 +33,23 @@ class Equipe
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'equipe')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Score>
+     */
+    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'equipe')]
+    private Collection $scores;
+
+    /**
+     * @var Collection<int, Competition>
+     */
+    #[ORM\ManyToMany(targetEntity: Competition::class, mappedBy: 'equipes')]
+    private Collection $competitions;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->scores = new ArrayCollection();
+        $this->competitions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,6 +130,63 @@ class Equipe
             if ($user->getEquipe() === $this) {
                 $user->setEquipe(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): static
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores->add($score);
+            $score->setEquipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): static
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getEquipe() === $this) {
+                $score->setEquipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Competition>
+     */
+    public function getCompetitions(): Collection
+    {
+        return $this->competitions;
+    }
+
+    public function addCompetition(Competition $competition): static
+    {
+        if (!$this->competitions->contains($competition)) {
+            $this->competitions->add($competition);
+            $competition->addEquipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetition(Competition $competition): static
+    {
+        if ($this->competitions->removeElement($competition)) {
+            $competition->removeEquipe($this);
         }
 
         return $this;

@@ -44,9 +44,16 @@ class Defi
     #[ORM\OneToMany(targetEntity: Preuve::class, mappedBy: 'defi')]
     private Collection $preuves;
 
+    /**
+     * @var Collection<int, Competition>
+     */
+    #[ORM\ManyToMany(targetEntity: Competition::class, mappedBy: 'defis')]
+    private Collection $competitions;
+
     public function __construct()
     {
         $this->preuves = new ArrayCollection();
+        $this->competitions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,6 +170,33 @@ class Defi
             if ($preufe->getDefi() === $this) {
                 $preufe->setDefi(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Competition>
+     */
+    public function getCompetitions(): Collection
+    {
+        return $this->competitions;
+    }
+
+    public function addCompetition(Competition $competition): static
+    {
+        if (!$this->competitions->contains($competition)) {
+            $this->competitions->add($competition);
+            $competition->addDefi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetition(Competition $competition): static
+    {
+        if ($this->competitions->removeElement($competition)) {
+            $competition->removeDefi($this);
         }
 
         return $this;

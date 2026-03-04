@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -48,6 +50,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     private ?Equipe $equipe = null;
+
+    /**
+     * @var Collection<int, Preuve>
+     */
+    #[ORM\OneToMany(targetEntity: Preuve::class, mappedBy: 'User')]
+    private Collection $preuves;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'auteur')]
+    private Collection $messages;
+
+    /**
+     * @var Collection<int, Conversation>
+     */
+    #[ORM\OneToMany(targetEntity: Conversation::class, mappedBy: 'users')]
+    private Collection $conversations;
+
+    public function __construct()
+    {
+        $this->preuves = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->conversations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -192,6 +219,96 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEquipe(?Equipe $equipe): static
     {
         $this->equipe = $equipe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Preuve>
+     */
+    public function getPreuves(): Collection
+    {
+        return $this->preuves;
+    }
+
+    public function addPreufe(Preuve $preufe): static
+    {
+        if (!$this->preuves->contains($preufe)) {
+            $this->preuves->add($preufe);
+            $preufe->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreufe(Preuve $preufe): static
+    {
+        if ($this->preuves->removeElement($preufe)) {
+            // set the owning side to null (unless already changed)
+            if ($preufe->getUser() === $this) {
+                $preufe->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getAuteur() === $this) {
+                $message->setAuteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversations(): Collection
+    {
+        return $this->conversations;
+    }
+
+    public function addConversation(Conversation $conversation): static
+    {
+        if (!$this->conversations->contains($conversation)) {
+            $this->conversations->add($conversation);
+            $conversation->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversation(Conversation $conversation): static
+    {
+        if ($this->conversations->removeElement($conversation)) {
+            // set the owning side to null (unless already changed)
+            if ($conversation->getUsers() === $this) {
+                $conversation->setUsers(null);
+            }
+        }
 
         return $this;
     }

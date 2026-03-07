@@ -12,7 +12,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Preuve;
 use App\Entity\Defi;
-use App\Entity\User;
 use App\Form\PreuveType;
 
 final class ChallengeController extends AbstractController
@@ -20,6 +19,7 @@ final class ChallengeController extends AbstractController
     #[Route('/challenge', name: 'app_challenge')]
     public function index(DefiRepository $defiRepository, PreuveRepository $preuveRepository): Response
     {
+        /** @var \App\Entity\Utilisateur $user */
         // seul l'utilisateur connecter peut accéder à ses challenges
         $user = $this->getUser();
         if (!$user) return $this->redirectToRoute('app_login');

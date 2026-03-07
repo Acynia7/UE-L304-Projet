@@ -1,0 +1,280 @@
+// couleurs ecobattle
+$teal: #02ABA9;
+$teal-dark: #077586;
+$green: #9DD240;
+$yellow: #F2D067;
+$brown: #945534;
+$grey: #DCDCDC;
+$white: #ffffff;
+$text-muted: #6c757d;
+$red: #e74c3c;
+$radius: 12px;
+$shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+// layout dashboard
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: $teal-dark;
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .welcome {
+        color: $text-muted;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 1.5rem;
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+// cards de stats en haut
+.stat-card {
+    background: $white;
+    border-radius: $radius;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: $shadow;
+    min-height: 100px;
+
+    .icon {
+        font-size: 2.2rem;
+        flex-shrink: 0;
+        width: 48px;
+        text-align: center;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .top {
+        display: flex;
+        align-items: baseline;
+        gap: 0.25rem;
+    }
+
+    .value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: $teal;
+        line-height: 1.2;
+    }
+
+    .unit {
+        font-size: 0.85rem;
+        color: $text-muted;
+    }
+
+    .label {
+        font-size: 0.85rem;
+        color: $text-muted;
+        margin-top: 0.15rem;
+    }
+}
+
+// bloc equipe
+.equipe-resume {
+    background: $white;
+    border-radius: $radius;
+    padding: 1.5rem;
+    box-shadow: $shadow;
+
+    h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .score {
+        color: $teal;
+        margin-bottom: 1rem;
+    }
+
+    h3 {
+        font-size: 0.95rem;
+        color: $text-muted;
+        margin-bottom: 0.5rem;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .pts {
+        color: $teal;
+        font-weight: 600;
+    }
+}
+
+// liste des defis
+.defis-recents {
+    h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+.defi-card {
+    background: $white;
+    border-radius: $radius;
+    padding: 1.25rem;
+    box-shadow: $shadow;
+    border-left: 4px solid $text-muted;
+
+    &.valide { border-left-color: $green; }
+    &.en-cours { border-left-color: $yellow; }
+    &.a-faire { border-left-color: $red; }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .categorie {
+        font-size: 0.8rem;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .statut {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+
+        &.valide {
+            background: rgba($green, 0.15);
+            color: $green;
+        }
+        &.en-cours {
+            background: rgba($yellow, 0.2);
+            color: #b8860b;
+        }
+        &.a-faire {
+            background: rgba($red, 0.15);
+            color: $red;
+        }
+    }
+
+    h3 {
+        font-size: 1.1rem;
+        margin: 0.25rem 0;
+    }
+
+    .description {
+        font-size: 0.9rem;
+        color: $text-muted;
+        margin-bottom: 0.75rem;
+    }
+
+    .footer {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .points { color: $teal; }
+    .co2 { color: $green; }
+}
+
+// derniers scores
+.derniers-scores {
+    background: $white;
+    border-radius: $radius;
+    padding: 1.5rem;
+    box-shadow: $shadow;
+
+    h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .motif { font-weight: 500; }
+
+    .date {
+        font-size: 0.8rem;
+        color: $text-muted;
+    }
+
+    .gained {
+        color: $green;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+}

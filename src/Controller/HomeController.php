@@ -28,11 +28,13 @@ final class HomeController extends AbstractController
     }
 
     #[Route('/', name: 'app_home')]
+    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/challenge', name: 'app_challenge')]
+    #[Route('/classement', name: 'app_classement')]
+    #[Route('/profil', name: 'app_profil')]
     public function index(): Response
     {
-        return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
+        return $this->render('base.html.twig');
     }
 }
 

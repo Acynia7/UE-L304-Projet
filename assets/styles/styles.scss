@@ -1,4 +1,11 @@
-body
-{
-    background-color: antiquewhite;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #DCDCDC;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #077586;
 }

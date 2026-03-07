@@ -48,8 +48,7 @@ jobs:
             cp ${{ secrets.TARGET_DIR }}/.env.local .env.local
             docker stop ecobattle || true # Stop the container if it is already running, otherwise the build will fail because of locked files
             docker rm ecobattle || true # Remove the container if it is already running, otherwise the build will fail because of locked files
-            docker compose -f compose.yaml -f compose.prod.yaml build --pull --no-cache
-            docker compose -f compose.yaml -f compose.prod.yaml up -d 
+            docker compose -f compose.yaml -f compose.prod.yaml build --pull --no-cache && docker compose -f compose.yaml -f compose.prod.yaml up -d
 
       - name: Check ecobattle container
         uses: appleboy/ssh-action@v1.0.0

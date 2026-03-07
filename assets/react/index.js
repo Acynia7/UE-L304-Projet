@@ -1,12 +1,12 @@
 import React from "react";
-import App from "./components/app.jsx";
 import { createRoot } from "react-dom/client";
+import Router from "./Router";
 
 const container = document.getElementById("app");
 const root = createRoot(container);
 
 root.render(
     <React.StrictMode>
-        <App />
+        <Router />
     </React.StrictMode>
 );

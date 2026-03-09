@@ -6,6 +6,7 @@ use App\Repository\ClassementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClassementRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Classement
 {
     #[ORM\Id]
@@ -91,5 +92,13 @@ class Classement
         $this->competition = $competition;
 
         return $this;
+    }
+
+    #[ORM\PrePersist] 
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
     }
 }

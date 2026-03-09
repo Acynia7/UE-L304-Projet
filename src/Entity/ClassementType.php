@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClassementTypeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ClassementType
 {
     #[ORM\Id]
@@ -89,5 +90,13 @@ class ClassementType
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist] 
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
     }
 }

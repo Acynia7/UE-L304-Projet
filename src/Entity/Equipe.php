@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EquipeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Equipe
 {
     #[ORM\Id]
@@ -190,5 +191,17 @@ class Equipe
         }
 
         return $this;
+    }
+
+    public function __toString(): string {
+        return $this->nom;
+    }
+
+    #[ORM\PrePersist] 
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
     }
 }

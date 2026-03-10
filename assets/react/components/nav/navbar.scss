@@ -1,0 +1,116 @@
+@use '../_variables';
+
+.navbar
+{
+  top: 0;
+  overflow: hidden;
+  position: absolute;
+  display: flex;
+  width: 100%;
+  top: 0;
+  padding: 14px 0;
+  z-index: 15;
+  justify-content: center;
+}
+
+.navbar__list
+{
+    list-style: none;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.navbar__sub-list 
+{
+    list-style: none;
+    display: none;
+}
+
+
+
+.navbar__sub-list--open
+{
+    display: block;
+}
+
+.navbar__responsive-close,
+.navbar__responsive-open
+{
+    display: none;
+}
+
+/* Smartphones en mode Portrait (max 480px) */
+@media screen and (max-width: 480px) {
+    
+    .navbar__responsive-close,
+    .navbar__responsive-open
+    {
+        display: block;
+    }
+}
+
+@keyframes header {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.navbar-scrolled
+{
+  background-color: var(--background);
+  position: fixed;
+  box-shadow: 0 10px 15px rgba(25, 25, 25, .1);
+  animation: 300ms ease-in-out 0s normal none 1 running header;
+}
+
+.navbar 
+{
+  position: sticky;
+}
+
+.navbar__link,
+.navbar__sub-link
+{
+    text-decoration: none;
+    color: var(--black);
+    transition: color .5s;
+}
+
+button.navbar__link,
+.navbar__link
+{
+    font-size: 16px;
+}
+
+.navbar__link:hover,
+.navbar__sub-link:hover
+{
+    color: var(--secondary);
+}
+
+.navbar__arrow-phone--button,
+button.navbar__link
+{
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--black);
+    transition: color .5s;
+    font-family: inherit;
+}
+
+
+.navbar__arrow-phone--button:hover
+{
+    color: var(--secondary);
+}
+
+
+.is-active
+{
+    color: var(--secondary);
+}

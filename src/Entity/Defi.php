@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DefiRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Defi
 {
     #[ORM\Id]
@@ -200,5 +201,13 @@ class Defi
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
     }
 }

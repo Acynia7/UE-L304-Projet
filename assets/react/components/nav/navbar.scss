@@ -1,9 +1,6 @@
-@use '../_variables';
-
 .navbar
 {
   top: 0;
-  overflow: hidden;
   position: absolute;
   display: flex;
   width: 100%;
@@ -19,16 +16,20 @@
     text-decoration: none;
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: 30px;
 }
 
 .navbar__sub-list 
 {
     list-style: none;
     display: none;
+    position: absolute;    
 }
 
-
+.navbar__item
+{
+    position: relative;
+}
 
 .navbar__sub-list--open
 {

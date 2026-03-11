@@ -1,0 +1,36 @@
+.o-container
+{
+    width: 100%;
+    max-width: 1320px;
+}
+.o-container--centered
+{
+	margin-right: auto;
+	margin-left: auto;
+}
+
+@media (max-width: 1200px)
+{
+	.o-container
+	{
+		padding-right: 25px;
+		padding-left: 25px;
+	}
+
+	.o-container--no-padding
+	{
+		padding-right: 0;
+		padding-left: 0;
+	}
+}
+
+
+/* ------------------ Mobile ------------------ */
+@media (max-width: 599px)
+{
+	.o-container
+	{
+		padding-right: 12px;
+		padding-left: 12px;
+	}
+}

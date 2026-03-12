@@ -4,102 +4,116 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    color: $teal-dark;
+    color: $text-dark;
 
-    &__header {
+    // hero gradient
+    &__hero {
+        background: $gradient;
+        border-radius: $radius;
+        padding: 2.5rem;
+        color: $white;
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         margin-bottom: 2rem;
-        flex-wrap: wrap;
-        gap: 1rem;
+        box-shadow: 0 4px 20px rgba($teal-dark, 0.3);
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 0.25rem;
+        @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
         }
     }
 
-    &__subtitle {
-        color: $text-muted;
-        font-size: 1.1rem;
+    &__hero-text {
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        p { opacity: 0.85; font-size: 1.05rem; }
     }
 
-    &__scores {
+    &__hero-scores {
         display: flex;
         gap: 0.75rem;
     }
 
-    &__score-badge {
-        background: $teal;
-        color: $white;
-        border-radius: $radius;
+    &__hero-badge {
+        background: rgba($white, 0.15);
+        border-radius: $radius-sm;
         padding: 0.75rem 1.25rem;
         text-align: center;
-
-        &--team {
-            background: $teal-dark;
-        }
+        backdrop-filter: blur(4px);
     }
 
-    &__score-value {
+    &__hero-badge-value {
         display: block;
         font-size: 1.5rem;
         font-weight: 700;
-        line-height: 1.2;
     }
 
-    &__score-label {
+    &__hero-badge-label {
         font-size: 0.75rem;
-        opacity: 0.85;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
 
+    // onglets
     &__tabs {
         display: flex;
         gap: 0.5rem;
         margin-bottom: 1.5rem;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 0;
+        background: $white;
+        border-radius: $radius;
+        padding: 0.4rem;
+        box-shadow: $shadow;
     }
 
     &__tab {
-        padding: 0.75rem 1.25rem;
+        flex: 1;
+        padding: 0.75rem 1rem;
         border: none;
         background: none;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-weight: 600;
         color: $text-muted;
         cursor: pointer;
-        border-bottom: 3px solid transparent;
-        margin-bottom: -2px;
+        border-radius: $radius-sm;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        transition: all 0.2s;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: $transition;
 
         &:hover {
-            color: $teal-dark;
+            background: $grey;
+            color: $text-dark;
         }
 
         &.active {
-            color: $teal-dark;
+            color: $white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-            &.a-faire { border-bottom-color: $red; }
-            &.en-cours { border-bottom-color: $yellow; }
-            &.valide { border-bottom-color: $green; }
+            &.a-faire { background: $red; }
+            &.en-cours { background: #e6a817; }
+            &.valide { background: $teal; }
         }
     }
 
+    &__tab-icon { font-size: 1rem; }
+
     &__tab-count {
-        background: $grey;
-        color: $teal-dark;
+        background: rgba($white, 0.25);
         border-radius: 10px;
-        padding: 0.1rem 0.5rem;
-        font-size: 0.8rem;
-        font-weight: 700;
+        padding: 0.1rem 0.45rem;
+        font-size: 0.75rem;
+
+        .active & { background: rgba($white, 0.3); }
     }
 
+    // liste
     &__list {
         display: flex;
         flex-direction: column;
@@ -109,16 +123,31 @@
     &__empty {
         text-align: center;
         color: $text-muted;
-        padding: 3rem;
-        font-size: 1.1rem;
+        padding: 4rem 2rem;
+        background: $white;
+        border-radius: $radius;
+        box-shadow: $shadow;
     }
 
+    &__empty-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 0.75rem;
+    }
+
+    // carte defi
     &__card {
         background: $white;
         border-radius: $radius;
         padding: 1.5rem;
         box-shadow: $shadow;
         border-left: 4px solid $text-muted;
+        transition: $transition;
+
+        &:hover {
+            box-shadow: $shadow-hover;
+            transform: translateY(-2px);
+        }
 
         &.valide { border-left-color: $green; }
         &.en-cours { border-left-color: $yellow; }
@@ -129,7 +158,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 
     &__card-meta {
@@ -139,61 +168,66 @@
     }
 
     &__card-categorie {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: $text-muted;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        font-weight: 600;
     }
 
     &__card-difficulte {
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.15rem 0.5rem;
-        border-radius: 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 0.15rem 0.55rem;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
 
         &.facile {
-            background: rgba($green, 0.15);
-            color: darken($green, 15%);
+            background: rgba($green, 0.12);
+            color: darken($green, 20%);
         }
         &.moyen {
-            background: rgba($yellow, 0.2);
+            background: rgba($yellow, 0.15);
             color: #b8860b;
         }
         &.difficile {
-            background: rgba($red, 0.15);
+            background: rgba($red, 0.1);
             color: $red;
         }
     }
 
     &__card-statut {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: 600;
-        padding: 0.2rem 0.6rem;
+        padding: 0.2rem 0.65rem;
         border-radius: 20px;
 
         &.valide {
-            background: rgba($green, 0.15);
-            color: $green;
+            background: rgba($green, 0.12);
+            color: darken($green, 20%);
         }
         &.en-cours {
-            background: rgba($yellow, 0.2);
+            background: rgba($yellow, 0.15);
             color: #b8860b;
         }
         &.a-faire {
-            background: rgba($red, 0.15);
+            background: rgba($red, 0.1);
             color: $red;
         }
     }
 
     &__card-titre {
-        font-size: 1.15rem;
-        margin: 0.25rem 0;
+        font-size: 1.1rem;
+        margin-bottom: 0.35rem;
+        color: $text-dark;
     }
 
     &__card-desc {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: $text-muted;
         margin-bottom: 1rem;
+        line-height: 1.5;
     }
 
     &__card-bottom {
@@ -204,27 +238,29 @@
 
     &__card-rewards {
         display: flex;
-        gap: 1.5rem;
-        font-size: 0.9rem;
-        font-weight: 600;
+        gap: 1.25rem;
+        font-size: 0.85rem;
+        font-weight: 700;
     }
 
     &__card-points { color: $teal; }
     &__card-co2 { color: $green; }
 
     &__card-btn {
-        background: $teal;
+        background: $gradient;
         color: $white;
         border: none;
-        padding: 0.5rem 1.25rem;
-        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+        border-radius: $radius-sm;
         font-size: 0.85rem;
         font-weight: 600;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: $transition;
+        box-shadow: 0 2px 8px rgba($teal-dark, 0.25);
 
         &:hover {
-            background: $teal-dark;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba($teal-dark, 0.35);
         }
     }
 }

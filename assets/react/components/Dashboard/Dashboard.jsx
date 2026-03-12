@@ -1,32 +1,47 @@
 import React from "react";
 import { mockUser, mockEquipe, mockDefis, mockScores } from "../../mockData";
-import StatCard from "./StatCard";
 import EquipeResume from "./EquipeResume";
 import DefisRecents from "./DefisRecents";
 import DerniersScores from "./DerniersScores";
 import "./Dashboard.scss";
 
 export default function Dashboard() {
+    // TODO: remplacer par fetch API quand le back sera branche
     const user = mockUser;
     const equipe = mockEquipe;
     const defis = mockDefis;
     const scores = mockScores;
 
+    const defisValides = defis.filter((d) => d.statut === "valide").length;
+
     return (
         <div className="dashboard">
-            <h1>Tableau de bord</h1>
-            <p className="welcome">Bienvenue, {user.nom} !</p>
-
-            <div className="stats-row">
-                <StatCard title="Score total" value={user.scoreTotal} unit="pts" icon="🏆" />
-                <StatCard title="CO2 économisé" value={user.totalCO2} unit="kg" icon="🌱" />
-                <StatCard title="Défis complétés" value={defis.filter(d => d.statut === "valide").length} unit={"/ " + defis.length} icon="✅" />
-                <StatCard title="Rang équipe" value="#1" icon="🥇" />
+            {/* hero gradient avec stats rapides */}
+            <div className="dashboard__hero">
+                <div className="dashboard__hero-text">
+                    <h1>Bonjour, {user.nom.split(" ")[0]} !</h1>
+                    <p>Pret a relever de nouveaux defis eco ?</p>
+                </div>
+                <div className="dashboard__hero-stats">
+                    <div className="dashboard__hero-stat">
+                        <span className="dashboard__hero-stat-value">{user.scoreTotal}</span>
+                        <span className="dashboard__hero-stat-label">points</span>
+                    </div>
+                    <div className="dashboard__hero-stat">
+                        <span className="dashboard__hero-stat-value">{user.totalCO2}</span>
+                        <span className="dashboard__hero-stat-label">kg CO2 economises</span>
+                    </div>
+                    <div className="dashboard__hero-stat">
+                        <span className="dashboard__hero-stat-value">{defisValides}/{defis.length}</span>
+                        <span className="dashboard__hero-stat-label">defis completes</span>
+                    </div>
+                </div>
             </div>
 
-            <div className="content-grid">
+            {/* contenu principal : defis + sidebar */}
+            <div className="dashboard__content">
                 <DefisRecents defis={defis} />
-                <div className="sidebar">
+                <div className="dashboard__sidebar">
                     <EquipeResume equipe={equipe} />
                     <DerniersScores scores={scores} />
                 </div>

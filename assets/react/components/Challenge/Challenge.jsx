@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { mockUser, mockEquipe, mockDefis } from "../../mockData";
 import "./Challenge.scss";
 
-// labels affichés pour chaque statut
+// labels affiches pour chaque statut
 const STATUT_LABELS = {
-    valide: "Validé",
+    valide: "Valide",
     en_cours: "En attente",
-    a_faire: "À faire",
+    a_faire: "A faire",
 };
 
 const TABS = [
-    { key: "a_faire", label: "À faire" },
-    { key: "en_cours", label: "En attente" },
-    { key: "valide", label: "Validés" },
+    { key: "a_faire", label: "A faire", icon: "🎯" },
+    { key: "en_cours", label: "En attente", icon: "⏳" },
+    { key: "valide", label: "Valides", icon: "✅" },
 ];
 
 // convertit "en_cours" en "en-cours" pour les classes CSS
@@ -23,12 +23,12 @@ function cssStatut(statut) {
 export default function Challenge() {
     const [activeTab, setActiveTab] = useState("a_faire");
 
-    // TODO: remplacer par fetch API quand le back sera branché
+    // TODO: remplacer par fetch API quand le back sera branche
     const user = mockUser;
     const equipe = mockEquipe;
     const defis = mockDefis;
 
-    // tri des défis par statut
+    // tri des defis par statut
     const defisByStatut = {
         a_faire: defis.filter((d) => d.statut === "a_faire"),
         en_cours: defis.filter((d) => d.statut === "en_cours"),
@@ -43,25 +43,25 @@ export default function Challenge() {
 
     return (
         <div className="challenge">
-            <div className="challenge__header">
-                <div>
-                    <h1>Mes défis</h1>
-                    <p className="challenge__subtitle">
-                        Relevez des défis écologiques et gagnez des points !
-                    </p>
+            {/* hero gradient */}
+            <div className="challenge__hero">
+                <div className="challenge__hero-text">
+                    <h1>Mes defis</h1>
+                    <p>Relevez des defis ecologiques et gagnez des points !</p>
                 </div>
-                <div className="challenge__scores">
-                    <div className="challenge__score-badge">
-                        <span className="challenge__score-value">{user.scoreTotal}</span>
-                        <span className="challenge__score-label">pts perso</span>
+                <div className="challenge__hero-scores">
+                    <div className="challenge__hero-badge">
+                        <span className="challenge__hero-badge-value">{user.scoreTotal}</span>
+                        <span className="challenge__hero-badge-label">pts perso</span>
                     </div>
-                    <div className="challenge__score-badge challenge__score-badge--team">
-                        <span className="challenge__score-value">{equipe.scoreEquipe}</span>
-                        <span className="challenge__score-label">pts équipe</span>
+                    <div className="challenge__hero-badge">
+                        <span className="challenge__hero-badge-value">{equipe.scoreEquipe}</span>
+                        <span className="challenge__hero-badge-label">pts equipe</span>
                     </div>
                 </div>
             </div>
 
+            {/* onglets de filtrage */}
             <div className="challenge__tabs">
                 {TABS.map((tab) => (
                     <button
@@ -69,15 +69,20 @@ export default function Challenge() {
                         className={`challenge__tab ${activeTab === tab.key ? "active" : ""} ${cssStatut(tab.key)}`}
                         onClick={() => setActiveTab(tab.key)}
                     >
+                        <span className="challenge__tab-icon">{tab.icon}</span>
                         {tab.label}
                         <span className="challenge__tab-count">{counts[tab.key]}</span>
                     </button>
                 ))}
             </div>
 
+            {/* liste des defis */}
             <div className="challenge__list">
                 {defisByStatut[activeTab].length === 0 ? (
-                    <p className="challenge__empty">Aucun défi dans cette catégorie.</p>
+                    <div className="challenge__empty">
+                        <span className="challenge__empty-icon">🌿</span>
+                        <p>Aucun defi dans cette categorie.</p>
+                    </div>
                 ) : (
                     defisByStatut[activeTab].map((defi) => (
                         <div key={defi.id} className={`challenge__card ${cssStatut(defi.statut)}`}>
@@ -96,7 +101,7 @@ export default function Challenge() {
                             <p className="challenge__card-desc">{defi.description}</p>
                             <div className="challenge__card-bottom">
                                 <div className="challenge__card-rewards">
-                                    <span className="challenge__card-points">{defi.point} pts</span>
+                                    <span className="challenge__card-points">+{defi.point} pts</span>
                                     <span className="challenge__card-co2">-{defi.economieCO2} kg CO2</span>
                                 </div>
                                 {defi.statut === "a_faire" && (

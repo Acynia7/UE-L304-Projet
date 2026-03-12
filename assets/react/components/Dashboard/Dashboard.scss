@@ -1,32 +1,71 @@
 @import "../variables";
 
-// layout principal du dashboard
+// layout dashboard
 .dashboard {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    color: $teal-dark;
+    color: $text-dark;
 
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .welcome {
-        color: $text-muted;
+    // hero gradient header
+    &__hero {
+        background: $gradient;
+        border-radius: $radius;
+        padding: 2.5rem;
+        color: $white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 2rem;
-        font-size: 1.1rem;
+        box-shadow: 0 4px 20px rgba($teal-dark, 0.3);
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
+        }
     }
 
-    .stats-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
+    &__hero-text {
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        p {
+            opacity: 0.85;
+            font-size: 1.05rem;
+        }
     }
 
-    .content-grid {
+    &__hero-stats {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    &__hero-stat {
+        text-align: center;
+        background: rgba($white, 0.15);
+        border-radius: $radius-sm;
+        padding: 0.75rem 1.25rem;
+        backdrop-filter: blur(4px);
+    }
+
+    &__hero-stat-value {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    &__hero-stat-label {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    // grille contenu
+    &__content {
         display: grid;
         grid-template-columns: 1fr 380px;
         gap: 1.5rem;
@@ -36,59 +75,10 @@
         }
     }
 
-    .sidebar {
+    &__sidebar {
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
-    }
-}
-
-// cards stats (score, co2, defis, rang)
-.stat-card {
-    background: $white;
-    border-radius: $radius;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: $shadow;
-    min-height: 100px;
-
-    .icon {
-        font-size: 2.2rem;
-        flex-shrink: 0;
-        width: 48px;
-        text-align: center;
-    }
-
-    .info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .top {
-        display: flex;
-        align-items: baseline;
-        gap: 0.25rem;
-    }
-
-    .value {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: $teal;
-        line-height: 1.2;
-    }
-
-    .unit {
-        font-size: 0.85rem;
-        color: $text-muted;
-    }
-
-    .label {
-        font-size: 0.85rem;
-        color: $text-muted;
-        margin-top: 0.15rem;
     }
 }
 
@@ -98,20 +88,28 @@
     border-radius: $radius;
     padding: 1.5rem;
     box-shadow: $shadow;
+    transition: $transition;
+
+    &:hover { box-shadow: $shadow-hover; }
 
     h2 {
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        color: $text-dark;
     }
 
     .score {
         color: $teal;
+        font-size: 0.95rem;
         margin-bottom: 1rem;
+        strong { font-size: 1.1rem; }
     }
 
     h3 {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         margin-bottom: 0.5rem;
     }
 
@@ -124,12 +122,11 @@
     li {
         display: flex;
         justify-content: space-between;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #eee;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid $grey;
+        font-size: 0.9rem;
 
-        &:last-child {
-            border-bottom: none;
-        }
+        &:last-child { border-bottom: none; }
     }
 
     .pts {
@@ -143,6 +140,7 @@
     h2 {
         font-size: 1.3rem;
         margin-bottom: 1rem;
+        color: $text-dark;
     }
 
     .list {
@@ -152,12 +150,19 @@
     }
 }
 
+// carte de defi
 .defi-card {
     background: $white;
     border-radius: $radius;
-    padding: 1.25rem;
+    padding: 1.25rem 1.5rem;
     box-shadow: $shadow;
     border-left: 4px solid $text-muted;
+    transition: $transition;
+
+    &:hover {
+        box-shadow: $shadow-hover;
+        transform: translateY(-2px);
+    }
 
     &.valide { border-left-color: $green; }
     &.en-cours { border-left-color: $yellow; }
@@ -171,47 +176,50 @@
     }
 
     .categorie {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: $text-muted;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        font-weight: 600;
     }
 
     .statut {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: 600;
-        padding: 0.2rem 0.6rem;
+        padding: 0.2rem 0.65rem;
         border-radius: 20px;
 
         &.valide {
-            background: rgba($green, 0.15);
-            color: $green;
+            background: rgba($green, 0.12);
+            color: darken($green, 20%);
         }
         &.en-cours {
-            background: rgba($yellow, 0.2);
+            background: rgba($yellow, 0.15);
             color: #b8860b;
         }
         &.a-faire {
-            background: rgba($red, 0.15);
+            background: rgba($red, 0.1);
             color: $red;
         }
     }
 
     h3 {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         margin: 0.25rem 0;
+        color: $text-dark;
     }
 
     .description {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: $text-muted;
         margin-bottom: 0.75rem;
+        line-height: 1.4;
     }
 
     .footer {
         display: flex;
         gap: 1.5rem;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: 600;
     }
 
@@ -225,10 +233,14 @@
     border-radius: $radius;
     padding: 1.5rem;
     box-shadow: $shadow;
+    transition: $transition;
+
+    &:hover { box-shadow: $shadow-hover; }
 
     h2 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         margin-bottom: 1rem;
+        color: $text-dark;
     }
 
     ul {
@@ -242,11 +254,9 @@
         justify-content: space-between;
         align-items: center;
         padding: 0.6rem 0;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid $grey;
 
-        &:last-child {
-            border-bottom: none;
-        }
+        &:last-child { border-bottom: none; }
     }
 
     .info {
@@ -254,16 +264,20 @@
         flex-direction: column;
     }
 
-    .motif { font-weight: 500; }
+    .motif {
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: $text-dark;
+    }
 
     .date {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         color: $text-muted;
     }
 
     .gained {
         color: $green;
         font-weight: 700;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 }

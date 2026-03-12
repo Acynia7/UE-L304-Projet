@@ -2,42 +2,62 @@ import React, { useState } from "react";
 import { mockUser, mockClassement, mockClassementUsers } from "../../mockData";
 import "./Classement.scss";
 
-// podium top 3
-const MEDALS = ["🥇", "🥈", "🥉"];
-
 const TABS = [
-    { key: "equipes", label: "Équipes" },
+    { key: "equipes", label: "Equipes" },
     { key: "joueurs", label: "Joueurs" },
 ];
+
+// podium top 3 avec medailles
+const MEDALS = ["🥇", "🥈", "🥉"];
+const PODIUM_ORDER = [1, 0, 2]; // affichage: 2e, 1er, 3e (le 1er au centre)
+
+function PodiumItem({ entry, rank, isTeam }) {
+    const isFirst = rank === 0;
+    return (
+        <div className={`classement__podium-item ${isFirst ? "classement__podium-item--first" : ""}`}>
+            <div className={`classement__podium-avatar ${isFirst ? "classement__podium-avatar--first" : ""}`}>
+                {MEDALS[rank]}
+            </div>
+            <span className="classement__podium-name">{entry.nom}</span>
+            <span className="classement__podium-score">
+                {isTeam ? entry.score : entry.points} pts
+            </span>
+            <div className={`classement__podium-bar classement__podium-bar--${rank + 1}`} />
+        </div>
+    );
+}
 
 export default function Classement() {
     const [activeTab, setActiveTab] = useState("equipes");
 
-    // TODO: remplacer par fetch API quand le back sera branché
+    // TODO: remplacer par fetch API quand le back sera branche
     const user = mockUser;
+    const monRang = mockClassementUsers.findIndex((u) => u.isMe) + 1;
+
+    const currentData = activeTab === "equipes" ? mockClassement : mockClassementUsers;
+    const isTeam = activeTab === "equipes";
+
+    // top 3 pour le podium
+    const top3 = currentData.slice(0, 3);
+    // reste du classement
+    const rest = currentData.slice(3);
 
     return (
         <div className="classement">
-            <div className="classement__header">
-                <h1>Classement</h1>
-                <p className="classement__subtitle">
-                    Comparez vos performances avec les autres joueurs et équipes.
-                </p>
-            </div>
-
-            <div className="classement__my-rank">
-                <div className="classement__my-rank-icon">📊</div>
-                <div className="classement__my-rank-info">
-                    <span className="classement__my-rank-label">Mon classement</span>
-                    <span className="classement__my-rank-position">
-                        #{mockClassementUsers.findIndex((u) => u.isMe) + 1}
-                    </span>
+            {/* hero gradient avec rang perso */}
+            <div className="classement__hero">
+                <div className="classement__hero-text">
+                    <h1>Classement</h1>
+                    <p>Comparez vos performances avec les autres.</p>
                 </div>
-                <div className="classement__my-rank-score">
-                    <span className="classement__my-rank-pts">{user.scoreTotal} pts</span>
+                <div className="classement__hero-rank">
+                    <span className="classement__hero-rank-label">Mon rang</span>
+                    <span className="classement__hero-rank-value">#{monRang}</span>
+                    <span className="classement__hero-rank-pts">{user.scoreTotal} pts</span>
                 </div>
             </div>
 
+            {/* onglets equipes / joueurs */}
             <div className="classement__tabs">
                 {TABS.map((tab) => (
                     <button
@@ -50,53 +70,42 @@ export default function Classement() {
                 ))}
             </div>
 
-            {activeTab === "equipes" ? (
+            {/* podium top 3 */}
+            <div className="classement__podium">
+                {PODIUM_ORDER.map((idx) => (
+                    <PodiumItem
+                        key={idx}
+                        entry={top3[idx]}
+                        rank={idx}
+                        isTeam={isTeam}
+                    />
+                ))}
+            </div>
+
+            {/* tableau du reste */}
+            {rest.length > 0 && (
                 <div className="classement__table">
-                    <div className="classement__table-header">
-                        <span className="classement__col-rang">#</span>
-                        <span className="classement__col-nom">Équipe</span>
-                        <span className="classement__col-score">Score</span>
-                    </div>
-                    {mockClassement.map((entry) => (
-                        <div
-                            key={entry.position}
-                            className={`classement__row ${entry.nom === "Les EcoWarriors" ? "classement__row--me" : ""} ${entry.position <= 3 ? "classement__row--top" : ""}`}
-                        >
-                            <span className="classement__col-rang">
-                                {entry.position <= 3 ? MEDALS[entry.position - 1] : entry.position}
-                            </span>
-                            <span className="classement__col-nom">
-                                {entry.nom}
-                                {entry.nom === "Les EcoWarriors" && (
-                                    <span className="classement__badge-me">Mon équipe</span>
-                                )}
-                            </span>
-                            <span className="classement__col-score">{entry.score} pts</span>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <div className="classement__table">
-                    <div className="classement__table-header">
-                        <span className="classement__col-rang">#</span>
-                        <span className="classement__col-nom">Joueur</span>
-                        <span className="classement__col-score">Score</span>
-                    </div>
-                    {mockClassementUsers.map((entry) => (
-                        <div
-                            key={entry.rang}
-                            className={`classement__row ${entry.isMe ? "classement__row--me" : ""} ${entry.rang <= 3 ? "classement__row--top" : ""}`}
-                        >
-                            <span className="classement__col-rang">
-                                {entry.rang <= 3 ? MEDALS[entry.rang - 1] : entry.rang}
-                            </span>
-                            <span className="classement__col-nom">
-                                {entry.nom}
-                                {entry.isMe && <span className="classement__badge-me">Moi</span>}
-                            </span>
-                            <span className="classement__col-score">{entry.points} pts</span>
-                        </div>
-                    ))}
+                    {rest.map((entry) => {
+                        const rank = isTeam ? entry.position : entry.rang;
+                        const score = isTeam ? entry.score : entry.points;
+                        const isMe = isTeam
+                            ? entry.nom === "Les EcoWarriors"
+                            : entry.isMe;
+
+                        return (
+                            <div
+                                key={rank}
+                                className={`classement__row ${isMe ? "classement__row--me" : ""}`}
+                            >
+                                <span className="classement__row-rang">{rank}</span>
+                                <span className="classement__row-nom">
+                                    {entry.nom}
+                                    {isMe && <span className="classement__row-badge">{isTeam ? "Mon equipe" : "Moi"}</span>}
+                                </span>
+                                <span className="classement__row-score">{score} pts</span>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </div>

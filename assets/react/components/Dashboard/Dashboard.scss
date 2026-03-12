@@ -1,17 +1,6 @@
-// couleurs ecobattle
-$teal: #02ABA9;
-$teal-dark: #077586;
-$green: #9DD240;
-$yellow: #F2D067;
-$brown: #945534;
-$grey: #DCDCDC;
-$white: #ffffff;
-$text-muted: #6c757d;
-$red: #e74c3c;
-$radius: 12px;
-$shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+@import "../variables";
 
-// layout dashboard
+// layout principal du dashboard
 .dashboard {
     max-width: 1200px;
     margin: 0 auto;
@@ -54,7 +43,7 @@ $shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 }
 
-// cards de stats en haut
+// cards stats (score, co2, defis, rang)
 .stat-card {
     background: $white;
     border-radius: $radius;
@@ -103,7 +92,7 @@ $shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 }
 
-// bloc equipe
+// resume equipe (sidebar)
 .equipe-resume {
     background: $white;
     border-radius: $radius;
@@ -149,7 +138,7 @@ $shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 }
 
-// liste des defis
+// liste des defis recents
 .defis-recents {
     h2 {
         font-size: 1.3rem;
@@ -230,7 +219,7 @@ $shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     .co2 { color: $green; }
 }
 
-// derniers scores
+// historique des derniers scores (sidebar)
 .derniers-scores {
     background: $white;
     border-radius: $radius;

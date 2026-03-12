@@ -1,4 +1,4 @@
-// mock data (a remplacer par les appels API)
+// donnees fictives pour le dev front (a remplacer par les appels API)
 
 export const mockUser = {
     id: 1,
@@ -87,4 +87,22 @@ export const mockClassement = [
     { position: 3, nom: "Planet Savers", score: 3980 },
     { position: 4, nom: "Eco Fighters", score: 3720 },
     { position: 5, nom: "Nature First", score: 3450 },
+    { position: 6, nom: "Terre Verte", score: 3200 },
+    { position: 7, nom: "Les Recycleurs", score: 2980 },
+    { position: 8, nom: "Zero Waste", score: 2750 },
+    { position: 9, nom: "Climat Action", score: 2500 },
+    { position: 10, nom: "Bio Squad", score: 2310 },
+];
+
+export const mockClassementUsers = [
+    { rang: 1, nom: "Aurélien Piotte", points: 1340, isMe: false },
+    { rang: 2, nom: "Nathan Saccol", points: 1250, isMe: true },
+    { rang: 3, nom: "Safiya Jaouahir", points: 1180, isMe: false },
+    { rang: 4, nom: "Emilie Valentin", points: 1050, isMe: false },
+    { rang: 5, nom: "Lucas Martin", points: 980, isMe: false },
+    { rang: 6, nom: "Clara Dupont", points: 920, isMe: false },
+    { rang: 7, nom: "Hugo Bernard", points: 870, isMe: false },
+    { rang: 8, nom: "Léa Moreau", points: 810, isMe: false },
+    { rang: 9, nom: "Thomas Petit", points: 750, isMe: false },
+    { rang: 10, nom: "Julie Robert", points: 690, isMe: false },
 ];

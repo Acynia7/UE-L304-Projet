@@ -1,5 +1,5 @@
 import React from "react";
-import { mockUser, mockEquipe, mockScores, mockDefis } from "../../mockData";
+import { mockUser, mockEquipe, mockScores, mockDefis, mockBadges } from "../../mockData";
 import "./Profil.scss";
 
 export default function Profil() {
@@ -8,8 +8,10 @@ export default function Profil() {
     const equipe = mockEquipe;
     const scores = mockScores;
     const defis = mockDefis;
+    const badges = mockBadges;
 
     const defisValides = defis.filter((d) => d.statut === "valide").length;
+    const badgesObtenus = badges.filter((b) => b.obtenu).length;
 
     return (
         <div className="profil">
@@ -23,9 +25,7 @@ export default function Profil() {
                         <h1>{user.nom}</h1>
                         <p className="profil__email">{user.email}</p>
                         {equipe && (
-                            <span className="profil__hero-team">
-                                {equipe.nom}
-                            </span>
+                            <span className="profil__hero-team">{equipe.nom}</span>
                         )}
                     </div>
                 </div>
@@ -54,6 +54,23 @@ export default function Profil() {
                     <span className="profil__stat-icon">👥</span>
                     <span className="profil__stat-value">{equipe ? equipe.membres.length : 0}</span>
                     <span className="profil__stat-label">Coequipiers</span>
+                </div>
+            </div>
+
+            {/* badges et recompenses */}
+            <div className="profil__badges-section">
+                <h2>Badges ({badgesObtenus}/{badges.length})</h2>
+                <div className="profil__badges-grid">
+                    {badges.map((badge) => (
+                        <div
+                            key={badge.id}
+                            className={`profil__badge ${badge.obtenu ? "profil__badge--obtenu" : "profil__badge--locked"}`}
+                        >
+                            <span className="profil__badge-icon">{badge.icon}</span>
+                            <span className="profil__badge-nom">{badge.nom}</span>
+                            <span className="profil__badge-desc">{badge.description}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
 

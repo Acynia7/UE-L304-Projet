@@ -106,3 +106,15 @@ export const mockClassementUsers = [
     { rang: 9, nom: "Thomas Petit", points: 750, isMe: false },
     { rang: 10, nom: "Julie Robert", points: 690, isMe: false },
 ];
+
+// badges et recompenses gamification
+export const mockBadges = [
+    { id: 1, nom: "Premier pas", icon: "🌱", description: "Premier defi valide", obtenu: true },
+    { id: 2, nom: "Team player", icon: "🤝", description: "Rejoindre une equipe", obtenu: true },
+    { id: 3, nom: "Veggie lover", icon: "🥗", description: "5 defis alimentation", obtenu: true },
+    { id: 4, nom: "Eco-warrior", icon: "⚔️", description: "10 defis valides", obtenu: false },
+    { id: 5, nom: "Sauveur de CO2", icon: "💨", description: "50 kg de CO2 economises", obtenu: false },
+    { id: 6, nom: "Regulier", icon: "🔥", description: "7 jours consecutifs", obtenu: false },
+    { id: 7, nom: "Hydro master", icon: "💧", description: "5 defis eau", obtenu: false },
+    { id: 8, nom: "Zero carbone", icon: "🏆", description: "100 kg de CO2 economises", obtenu: false },
+];

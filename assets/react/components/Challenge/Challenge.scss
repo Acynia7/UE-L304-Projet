@@ -113,6 +113,37 @@
         .active & { background: rgba($white, 0.3); }
     }
 
+    // filtres par categorie
+    &__categories {
+        display: flex;
+        gap: 0.4rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    &__cat-chip {
+        padding: 0.4rem 0.9rem;
+        border: 2px solid $grey;
+        background: $white;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: $text-muted;
+        cursor: pointer;
+        transition: $transition;
+
+        &:hover {
+            border-color: $teal;
+            color: $teal;
+        }
+
+        &.active {
+            background: $teal;
+            border-color: $teal;
+            color: $white;
+        }
+    }
+
     // liste
     &__list {
         display: flex;

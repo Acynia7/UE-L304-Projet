@@ -37,10 +37,15 @@ export default function Classement() {
     const currentData = activeTab === "equipes" ? mockClassement : mockClassementUsers;
     const isTeam = activeTab === "equipes";
 
-    // top 3 pour le podium
+    // top 3 pour le podium, reste pour le tableau
     const top3 = currentData.slice(0, 3);
-    // reste du classement
     const rest = currentData.slice(3);
+
+    // calcul progression vers le rang suivant
+    const meIdx = mockClassementUsers.findIndex((u) => u.isMe);
+    const mePoints = mockClassementUsers[meIdx]?.points || 0;
+    const nextPlayer = meIdx > 0 ? mockClassementUsers[meIdx - 1] : null;
+    const pointsToNext = nextPlayer ? nextPlayer.points - mePoints : 0;
 
     return (
         <div className="classement">
@@ -56,6 +61,21 @@ export default function Classement() {
                     <span className="classement__hero-rank-pts">{user.scoreTotal} pts</span>
                 </div>
             </div>
+
+            {/* progression vers le rang suivant */}
+            {nextPlayer && (
+                <div className="classement__next-rank">
+                    <div className="classement__next-rank-header">
+                        <span>🎯 Plus que <strong>{pointsToNext} pts</strong> pour depasser <strong>{nextPlayer.nom}</strong></span>
+                    </div>
+                    <div className="classement__next-rank-bar">
+                        <div
+                            className="classement__next-rank-fill"
+                            style={{ width: `${Math.round((mePoints / nextPlayer.points) * 100)}%` }}
+                        />
+                    </div>
+                </div>
+            )}
 
             {/* onglets equipes / joueurs */}
             <div className="classement__tabs">

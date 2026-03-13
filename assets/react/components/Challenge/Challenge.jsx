@@ -22,23 +22,25 @@ function cssStatut(statut) {
 
 export default function Challenge() {
     const [activeTab, setActiveTab] = useState("a_faire");
+    const [activeCategorie, setActiveCategorie] = useState("all");
 
     // TODO: remplacer par fetch API quand le back sera branche
     const user = mockUser;
     const equipe = mockEquipe;
     const defis = mockDefis;
 
-    // tri des defis par statut
-    const defisByStatut = {
-        a_faire: defis.filter((d) => d.statut === "a_faire"),
-        en_cours: defis.filter((d) => d.statut === "en_cours"),
-        valide: defis.filter((d) => d.statut === "valide"),
-    };
+    // categories uniques extraites des defis
+    const categories = ["all", ...new Set(defis.map((d) => d.categorie))];
 
-    const counts = {
-        a_faire: defisByStatut.a_faire.length,
-        en_cours: defisByStatut.en_cours.length,
-        valide: defisByStatut.valide.length,
+    // tri des defis par statut puis filtre par categorie
+    const defisFiltres = defis
+        .filter((d) => d.statut === activeTab)
+        .filter((d) => activeCategorie === "all" || d.categorie === activeCategorie);
+
+    const countsByStatut = {
+        a_faire: defis.filter((d) => d.statut === "a_faire").length,
+        en_cours: defis.filter((d) => d.statut === "en_cours").length,
+        valide: defis.filter((d) => d.statut === "valide").length,
     };
 
     return (
@@ -61,7 +63,7 @@ export default function Challenge() {
                 </div>
             </div>
 
-            {/* onglets de filtrage */}
+            {/* onglets de filtrage par statut */}
             <div className="challenge__tabs">
                 {TABS.map((tab) => (
                     <button
@@ -71,20 +73,33 @@ export default function Challenge() {
                     >
                         <span className="challenge__tab-icon">{tab.icon}</span>
                         {tab.label}
-                        <span className="challenge__tab-count">{counts[tab.key]}</span>
+                        <span className="challenge__tab-count">{countsByStatut[tab.key]}</span>
+                    </button>
+                ))}
+            </div>
+
+            {/* filtres par categorie */}
+            <div className="challenge__categories">
+                {categories.map((cat) => (
+                    <button
+                        key={cat}
+                        className={`challenge__cat-chip ${activeCategorie === cat ? "active" : ""}`}
+                        onClick={() => setActiveCategorie(cat)}
+                    >
+                        {cat === "all" ? "Toutes" : cat}
                     </button>
                 ))}
             </div>
 
             {/* liste des defis */}
             <div className="challenge__list">
-                {defisByStatut[activeTab].length === 0 ? (
+                {defisFiltres.length === 0 ? (
                     <div className="challenge__empty">
                         <span className="challenge__empty-icon">🌿</span>
                         <p>Aucun defi dans cette categorie.</p>
                     </div>
                 ) : (
-                    defisByStatut[activeTab].map((defi) => (
+                    defisFiltres.map((defi) => (
                         <div key={defi.id} className={`challenge__card ${cssStatut(defi.statut)}`}>
                             <div className="challenge__card-top">
                                 <div className="challenge__card-meta">

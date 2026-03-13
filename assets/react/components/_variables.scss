@@ -1,0 +1,24 @@
+// charte graphique EcoBattle - couleurs et design tokens
+
+$teal: #02ABA9;
+$teal-dark: #077586;
+$green: #9DD240;
+$yellow: #F2D067;
+$brown: #945534;
+$grey: #f0f2f5;
+$grey-light: #f8f9fa;
+$white: #ffffff;
+$text-dark: #1a2b3c;
+$text-muted: #6c757d;
+$red: #e74c3c;
+
+// layout
+$radius: 16px;
+$radius-sm: 10px;
+$shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+$shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
+$transition: all 0.25s ease;
+
+// gradient signature EcoBattle
+$gradient: linear-gradient(135deg, $teal 0%, $teal-dark 100%);
+$gradient-green: linear-gradient(135deg, $teal 0%, #2ecc71 100%);

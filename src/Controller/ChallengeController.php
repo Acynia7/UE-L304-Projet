@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\DefiRepository;
@@ -16,75 +17,98 @@ use App\Form\PreuveType;
 
 final class ChallengeController extends AbstractController
 {
-    #[Route('/challenge', name: 'app_challenge')]
-    public function index(DefiRepository $defiRepository, PreuveRepository $preuveRepository): Response
+    /**
+     * API JSON pour la page Challenge (React SPA).
+     *
+     * Anciennement sur /challenge (Twig), deplace en /api/challenges
+     * pour eviter le conflit de route avec le catch-all SPA du HomeController.
+     * Le front React fetch ce endpoint pour recuperer les defis de l'utilisateur.
+     */
+    #[Route('/api/challenges', name: 'api_challenges', methods: ['GET'])]
+    public function index(DefiRepository $defiRepository, PreuveRepository $preuveRepository): JsonResponse
     {
-        /** @var \App\Entity\Utilisateur $user */
-        // seul l'utilisateur connecter peut accéder à ses challenges
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
-        if (!$user) return $this->redirectToRoute('app_login');
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifie'], 401);
+        }
 
         $allDefis = $defiRepository->findAll();
-        $validDefi = [];
-        $defiAttente = [];
         $toDoDefi = [];
+        $defiAttente = [];
+        $validDefi = [];
 
-        foreach($allDefis as $defi){
-            $preuve = $preuveRepository->findOneBy(['user' => $user, 'defi' => $defi]);
-            if(!$preuve){
-                $toDoDefi[] = $defi;
-            }elseif($preuve->getStatus() === 'VALIDE'){
-                $validDefi[] = $defi;
-            }else{
-                $defiAttente[] = $defi;
+        foreach ($allDefis as $defi) {
+            $preuve = $preuveRepository->findOneBy(['User' => $user, 'defi' => $defi]);
+
+            $defiData = [
+                'id' => $defi->getId(),
+                'titre' => $defi->getTitre(),
+                'description' => $defi->getDescription(),
+                'point' => $defi->getPoint(),
+                'economieCO2' => $defi->getEconomieCO2(),
+                'categorie' => $defi->getCategorie() ? $defi->getCategorie()->getNom() : null,
+                'difficulte' => $defi->getDifficulte() ? $defi->getDifficulte()->getNom() : null,
+            ];
+
+            if (!$preuve) {
+                $defiData['statut'] = 'a-faire';
+                $toDoDefi[] = $defiData;
+            } elseif ($preuve->getStatus() === 'VALIDE') {
+                $defiData['statut'] = 'valide';
+                $validDefi[] = $defiData;
+            } else {
+                $defiData['statut'] = 'en-cours';
+                $defiAttente[] = $defiData;
             }
         }
 
-        return $this->render('challenge/index.html.twig', [
-            'toDoDefi' => $toDoDefi,
-            'validDefi' => $validDefi,
-            'defiAttente' => $defiAttente,
+        return $this->json([
+            'defis' => array_merge($toDoDefi, $defiAttente, $validDefi),
             'scorePerso' => $user->getScoreTotal(),
             'scoreEquipe' => $user->getEquipe() ? $user->getEquipe()->getScoreEquipe() : 0,
         ]);
     }
 
-    #[Route('/enregistre/{id}', name: 'app_challenge_submit')]
-    public function submit(Defi $defi, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    /**
+     * Soumission d'une preuve pour un defi.
+     * Deplace de /enregistre/{id} vers /api/challenge/{id}/submit.
+     */
+    #[Route('/api/challenge/{id}/submit', name: 'api_challenge_submit', methods: ['POST'])]
+    public function submit(Defi $defi, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): JsonResponse
     {
         $user = $this->getUser();
-        $preuve = new Preuve();
-        $form = $this->createForm(PreuveType::class, $preuve);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            // gérer l'envoie de la preuve en image
-            $imageFile = $form->get('image')->getData();
-            if($imageFile){
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-
-                $imageFile->move(
-                    $this->getParameter('preuves_directory'),
-                    $newFilename
-                );
-                $preuve->setUrlImage($newFilename);
-            }
-            $preuve->setUser($this->getUser());
-            $preuve->setDefi($defi);
-            $preuve->setDateEnvoi(new \DateTimeImmutable());
-            $preuve->setStatus('EN_ATTENTE');
-            
-            $em->persist($preuve);
-            $em->flush();
-            $this->addFlash('info', 'Votre preuve a été envoyée :). Elle sera validée par un admin prochainement !');
-            return $this->redirectToRoute('app_challenge_index');
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifie'], 401);
         }
 
-        return $this->render('challenge/submit.html.twig', [
-            'form' => $form->createView(),
-            'defi' => $defi
+        $imageFile = $request->files->get('image');
+        if (!$imageFile) {
+            return $this->json(['error' => 'Image requise'], 400);
+        }
+
+        $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $slugger->slug($originalFilename);
+        $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+        $imageFile->move(
+            $this->getParameter('preuves_directory'),
+            $newFilename
+        );
+
+        $preuve = new Preuve();
+        $preuve->setUrlImage($newFilename);
+        $preuve->setUser($user);
+        $preuve->setDefi($defi);
+        $preuve->setDateEnvoi(new \DateTimeImmutable());
+        $preuve->setStatus('EN_ATTENTE');
+
+        $em->persist($preuve);
+        $em->flush();
+
+        return $this->json([
+            'success' => true,
+            'message' => 'Preuve envoyee, elle sera validee par un admin prochainement.'
         ]);
     }
 }

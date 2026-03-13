@@ -5,19 +5,28 @@ namespace App\Controller;
 use App\Repository\EquipeRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class LeaderboardController extends AbstractController
 {
-    #[Route('/leaderboard', name: 'app_leaderboard')]
-    public function index(UserRepository $userRepository, EquipeRepository $equipeRepository): Response
+    /**
+     * API JSON pour la page Classement (React SPA).
+     *
+     * Anciennement sur /leaderboard (Twig), deplace en /api/leaderboard
+     * pour centraliser les endpoints API et laisser le routing front au HomeController.
+     * Le front React fetch ce endpoint pour afficher le classement.
+     */
+    #[Route('/api/leaderboard', name: 'api_leaderboard', methods: ['GET'])]
+    public function index(UserRepository $userRepository, EquipeRepository $equipeRepository): JsonResponse
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
-        if (!$user) return $this->redirectToRoute('app_login');
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifie'], 401);
+        }
 
-        // pour le classement des 10 meilleures utilisateur
+        // top 10 utilisateurs
         $topUsers = $userRepository->findBy([], ['scoreTotal' => 'DESC'], 10);
         $usersDt = [];
         foreach ($topUsers as $index => $u) {
@@ -25,11 +34,11 @@ final class LeaderboardController extends AbstractController
                 'rang' => $index + 1,
                 'nom' => $u->getNom(),
                 'points' => $u->getScoreTotal(),
-                'isMe' => ($u->getId() === $user->getId())
+                'isMe' => ($u->getId() === $user->getId()),
             ];
         }
 
-        // pour le classement des 10 meilleures équipes
+        // top 10 equipes
         $topEquipes = $equipeRepository->findBy([], ['scoreEquipe' => 'DESC'], 10);
         $equipesDt = [];
         foreach ($topEquipes as $index => $e) {
@@ -37,19 +46,19 @@ final class LeaderboardController extends AbstractController
                 'rang' => $index + 1,
                 'nom' => $e->getNom(),
                 'scores' => $e->getScoreEquipe(),
-                'isMyTeam' => ($user->getEquipe() && $e->getId() === $user->getEquipe()->getId())
+                'isMyTeam' => ($user->getEquipe() && $e->getId() === $user->getEquipe()->getId()),
             ];
         }
 
-        return $this->render('leaderboard/index.html.twig', [
+        return $this->json([
             'usersRang' => $usersDt,
             'equipesRang' => $equipesDt,
             'monRang' => $this->findUserRank($user, $userRepository),
+            'monScore' => $user->getScoreTotal(),
         ]);
     }
 
-    // fonction pour avoir le rang du user connecté
-    private function findUserRank($user, $userRepository): int
+    private function findUserRank($user, UserRepository $userRepository): int
     {
         $allUsers = $userRepository->findBy([], ['scoreTotal' => 'DESC']);
         foreach ($allUsers as $index => $u) {

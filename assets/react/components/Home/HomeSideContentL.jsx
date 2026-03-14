@@ -1,4 +1,5 @@
 import './home.scss';
+import '../_components.scss';
 import pic from './fond-par-defaut.png';
 export default function HomeSideContentL({alt,children}) {
     
@@ -6,7 +7,7 @@ export default function HomeSideContentL({alt,children}) {
         <>
             <div className="home__side-content">
                 <div className="o-container o-container--centered">
-                    <div className="c-flex--row">
+                    <div className="c-flex--row-responsive">
                         <div className="home__image w50r">
                             <img src={pic} alt={alt} />
                         </div>

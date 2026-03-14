@@ -6,7 +6,7 @@ export default function HomeSideContentR({alt,children}) {
         <>
             <div className="home__side-content">
                 <div className="o-container o-container--centered">
-                    <div className="c-flex--row">
+                    <div className="c-flex--row-r-responsive">
                         <div className="home__content c-content w50r">
                             <p>{children}</p>
                         </div>

@@ -122,6 +122,27 @@ export default function Navbar({...props}) {
     
     const location = useLocation();
 
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch("/api/home", { credentials: "same-origin" });
+                if (!response.ok) {
+                    setIsAuthenticated(false);
+                    return;
+                }
+
+                const data = await response.json();
+                setIsAuthenticated(Boolean(data?.user?.email));
+            } catch (err) {
+                setIsAuthenticated(false);
+            }
+        };
+
+        fetchUser();
+    }, [location.pathname]);
+
     const nav_items = pages.map(function (page)
     {
         const items = Object.keys(page.sub_items || { } ).map(function(sub_item_name)
@@ -212,6 +233,11 @@ export default function Navbar({...props}) {
                     <ul className="navbar__list">
 
                         { nav_items }
+                        {!isAuthenticated && (
+                            <li className="navbar__item">
+                                <a href="/login" className="navbar__link">Connexion</a>
+                            </li>
+                        )}
                     </ul>
                 </nav>
             </div>

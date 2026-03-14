@@ -1,12 +1,16 @@
 .home__hero::before
 {
-    position: absolute;
     content: '';
+
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    
     background-image: url(./fond-par-defaut.png);
+    background-size: cover;
+
     z-index: -1;
 }
 
@@ -26,9 +30,7 @@
     align-content: center;
 }
 
-// On utilise une boucle de 1 à 10
 @for $i from 1 through 10 {
-  // On calcule la valeur (1 * 10, 2 * 10, etc.)
   $value: $i * 10;
 
   .spacing-#{$value} {

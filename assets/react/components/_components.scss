@@ -131,10 +131,33 @@ h3.c-title::before
     flex-direction: row;
 }
 
+.c-flex--row-responsive
+{
+    @extend .c-flex;
+    flex-direction: row;
+}
+
+.c-flex--row-r-responsive
+{
+    @extend .c-flex;
+    flex-direction: row;
+}
+
 .c-flex--col
 {
     @extend .c-flex;
     flex-direction: column;
+}
+
+.c-flex--col-r
+{
+    @extend .c-flex;
+    flex-direction: column-reverse;
+}
+
+.nowrap
+{
+    flex-wrap: nowrap;
 }
 
 // Génère .g-10, .g-20, ..., .g-100
@@ -155,9 +178,21 @@ h3.c-title::before
 }
 
 /* Smartphones en mode Portrait (max 480px) */
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 780px) {
     .w50r
     {
         width: 100%;
+    }
+
+    .c-flex--row-responsive
+    {
+        @extend .c-flex;
+        flex-direction: column;
+    }
+
+    .c-flex--row-r-responsive
+    {
+        @extend .c-flex;
+        flex-direction: column-reverse;
     }
 }

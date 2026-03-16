@@ -1,6 +1,6 @@
 import './home.scss';
 import '../_components.scss';
-import pic from './fond-par-defaut.png';
+import pic from '../../../images/fond-par-defaut.png';
 export default function HomeSideContentL({alt,children}) {
     
     return (

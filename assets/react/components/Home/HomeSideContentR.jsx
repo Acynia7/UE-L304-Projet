@@ -1,5 +1,5 @@
 import './home.scss';
-import pic from './fond-par-defaut.png';
+import pic from '../../../images/fond-par-defaut.png';
 export default function HomeSideContentR({alt,children}) {
     
     return (

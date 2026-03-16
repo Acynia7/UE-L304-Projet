@@ -8,6 +8,8 @@ import Challenge from "./components/Challenge/Challenge";
 import Classement from "./components/Classement/Classement";
 import Profil from "./components/Profil/Profil";
 import Contact from "./components/Contact/Contact";
+import Login from "./components/Login/Login";
+import Register from "./components/Register/Register";
 
 export default function Router() {
     return (
@@ -21,6 +23,8 @@ export default function Router() {
                 <Route path="/classement" element={<Classement />} />
                 <Route path="/profil" element={<Profil />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
             </Routes>
         </BrowserRouter>
     );

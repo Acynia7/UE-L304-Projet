@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,14 +15,21 @@ final class HomeController extends AbstractController
     #[Route('/api/home', name: 'api_home', methods:['GET'])]
     public function api(): Response
     {
-        $data = 
-        [
+        $user = $this->getUser();
+
+        $userData = null;
+        if ($user instanceof User) {
+            $userData = [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'nom' => $user->getNom(),
+            ];
+        }
+
+        $data = [
             'message' => 'Hello from Symfony', 
             'items' => [1,2,3],
-            'user' => [
-                'name' => 'John Doe',
-                'email' => 'jd@jd.jd'
-            ]
+            'user' => $userData
         ];
         
         return $this->json($data);

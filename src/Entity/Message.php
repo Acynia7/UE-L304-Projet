@@ -27,6 +27,10 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'messages')]
     private ?Conversation $conversation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Equipe $equipe = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,5 +90,17 @@ class Message
         if ($this->createdAt === null) {
             $this->createdAt = new \DateTimeImmutable();
         }
+    }
+
+    public function getEquipe(): ?Equipe
+    {
+        return $this->equipe;
+    }
+
+    public function setEquipe(?Equipe $equipe): static
+    {
+        $this->equipe = $equipe;
+
+        return $this;
     }
 }

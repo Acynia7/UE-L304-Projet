@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { RiArrowDownSLine } from "react-icons/ri";
+import "./navbar.scss";
 
 const pages = [
 
@@ -95,6 +96,23 @@ export default function Navbar({...props}) {
     },
     []);
 
+    useEffect(function()
+    {
+        const handleScroll = () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 0) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    },
+    []);
+
     function ArrowDownResponsive()
     {
         (presence == 1)
@@ -103,6 +121,27 @@ export default function Navbar({...props}) {
     }
     
     const location = useLocation();
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch("/api/home", { credentials: "same-origin" });
+                if (!response.ok) {
+                    setIsAuthenticated(false);
+                    return;
+                }
+
+                const data = await response.json();
+                setIsAuthenticated(Boolean(data?.user?.email));
+            } catch (err) {
+                setIsAuthenticated(false);
+            }
+        };
+
+        fetchUser();
+    }, [location.pathname]);
 
     const nav_items = pages.map(function (page)
     {
@@ -194,13 +233,11 @@ export default function Navbar({...props}) {
                     <ul className="navbar__list">
 
                         { nav_items }
-
-                        <li>
-                            <div className="navbar__button color-btn">
-                                <a href="/contact">Contact</a>
-                                <span />
-                            </div>
-                        </li>
+                        {!isAuthenticated && (
+                            <li className="navbar__item">
+                                <a href="/login" className="navbar__link">Connexion</a>
+                            </li>
+                        )}
                     </ul>
                 </nav>
             </div>

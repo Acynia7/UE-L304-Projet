@@ -196,3 +196,10 @@ h3.c-title::before
         flex-direction: column-reverse;
     }
 }
+
+.flex--center
+{
+    align-items: center;
+    justify-items: center;
+    justify-self: center;
+}

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './Login.scss';
+import logo from '../../../images/logo-ecobattle-alpha.png';
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -35,32 +37,46 @@ export default function Login() {
     };
 
     return (
-        <div className="auth-page">
-            <h1>Connexion</h1>
-            <form onSubmit={handleSubmit} className="auth-form">
-                <div>
-                    <label htmlFor="username">Nom d'utilisateur</label>
-                    <input
-                        id="username"
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
+        <div className="auth-page o-container--centered">
+            <div className="auth-left">
+                <div className="flex--center">
+                    <img src={logo} alt="Logo du projet ecobattle" className="login_img" />
                 </div>
-                <div>
-                    <label htmlFor="password">Mot de passe</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+            </div>
+            <div className="auth-right">
+                <div className="c-title">
+                    <h1>Connexion</h1>
+                </div>       
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div>
+                        <label htmlFor="username">Nom d'utilisateur</label>
+                        <input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password">Mot de passe</label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {error && <p className="auth-error">{error}</p>}
+                    <button type="submit">Se connecter</button>
+                </form>
+                <div className="sign-up">
+                    <p>Vous n'avez pas de compte ?</p>
+                    <a href="/register"><button type='button'>Créer un compte</button></a>
                 </div>
-                {error && <p className="auth-error">{error}</p>}
-                <button type="submit">Se connecter</button>
-            </form>
+    
+            </div>
         </div>
     );
 }

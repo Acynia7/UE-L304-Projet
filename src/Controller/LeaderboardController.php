@@ -7,7 +7,6 @@ use App\Repository\EquipeRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class LeaderboardController extends AbstractController
@@ -17,7 +16,7 @@ final class LeaderboardController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if (!$user) {
             return new JsonResponse(['error' => 'Non connecté'], 401);
         }
@@ -30,7 +29,7 @@ final class LeaderboardController extends AbstractController
                 'rang' => $index + 1,
                 'nom' => $u->getNom(),
                 'points' => $u->getScoreTotal(),
-                'isMe' => ($u->getId() === $user->getId())
+                'isMe' => ($u->getId() === $user->getId()),
             ];
         }
 
@@ -53,18 +52,17 @@ final class LeaderboardController extends AbstractController
         ]);
     }
 
-    
-    // fonction pour le rang du user    
+    // fonction pour le rang du user
     private function findUserRank(User $user, UserRepository $userRepository): int
     {
         $allUsersSorted = $userRepository->findBy([], ['scoreTotal' => 'DESC']);
-        
+
         foreach ($allUsersSorted as $index => $u) {
             if ($u->getId() === $user->getId()) {
                 return $index + 1;
             }
         }
-        
+
         return 0;
     }
 }

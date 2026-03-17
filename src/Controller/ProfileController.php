@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ProfileController extends AbstractController
 {
-     #[Route('/api/profile', name: 'app_api_profile', methods: ['GET'])]
+    #[Route('/api/profile', name: 'app_api_profile', methods: ['GET'])]
     public function getProfile(): JsonResponse
     {
         /** @var User $user */
@@ -30,14 +30,14 @@ final class ProfileController extends AbstractController
             'equipe' => $user->getEquipe() ? $user->getEquipe()->getNom() : 'Aucune équipe',
             'equipe_id' => $user->getEquipe() ? $user->getEquipe()->getId() : null,
             'score_total' => $user->getScoreTotal(),
-            'nb_defis_releves' => count($user->getPreuves()), 
+            'nb_defis_releves' => count($user->getPreuves()),
         ]);
     }
 
     #[Route('/api/profile/update', name: 'app_api_profile_update', methods: ['POST'])]
     public function updateProfile(
-        Request $request, 
-        UserPasswordHasherInterface $hasher, 
+        Request $request,
+        UserPasswordHasherInterface $hasher,
         EntityManagerInterface $em
     ): JsonResponse {
         /** @var User $user */
@@ -74,7 +74,7 @@ final class ProfileController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if ($user->getEquipe()) {
             $user->setEquipe(null);
             $em->flush();
@@ -128,7 +128,7 @@ final class ProfileController extends AbstractController
         $message->setBody($data['body']);
         $message->setAuteur($user);
         $message->setEquipe($user->getEquipe());
-        
+
         $message->setCreatedAt(new \DateTimeImmutable());
 
         $em->persist($message);

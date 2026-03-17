@@ -1,5 +1,19 @@
-// charte graphique EcoBattle - couleurs et design tokens
+// Charte graphique EcoBattle
+// Variables CSS (composants Home, Navbar, Login - Aurélien)
+:root {
+    --primary: #9DD240;
+    --secondary: #02aba9;
+    --tertiary: #F2D067;
 
+    --background: #b8d389;
+
+    --brown: #945534;
+    --black: #221f1f;
+    --white: #DCDCDC;
+    --grey: #838383;
+}
+
+// Variables SCSS (composants Dashboard, Challenge, Classement, Profil - Nathan)
 $teal: #02ABA9;
 $teal-dark: #077586;
 $green: #9DD240;

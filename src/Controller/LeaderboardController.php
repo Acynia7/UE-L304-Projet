@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\EquipeRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,20 +11,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class LeaderboardController extends AbstractController
 {
-    /**
-     * API JSON pour la page Classement (React SPA).
-     *
-     * Anciennement sur /leaderboard (Twig), deplace en /api/leaderboard
-     * pour centraliser les endpoints API et laisser le routing front au HomeController.
-     * Le front React fetch ce endpoint pour afficher le classement.
-     */
-    #[Route('/api/leaderboard', name: 'api_leaderboard', methods: ['GET'])]
+    #[Route('/api/leaderboard', name: 'app_api_leaderboard', methods: ['GET'])]
     public function index(UserRepository $userRepository, EquipeRepository $equipeRepository): JsonResponse
     {
-        /** @var \App\Entity\User $user */
+        /** @var User $user */
         $user = $this->getUser();
+
         if (!$user) {
-            return $this->json(['error' => 'Non authentifie'], 401);
+            return new JsonResponse(['error' => 'Non connecté'], 401);
         }
 
         // top 10 utilisateurs
@@ -38,32 +33,36 @@ final class LeaderboardController extends AbstractController
             ];
         }
 
-        // top 10 equipes
+        // top 10 équipes
         $topEquipes = $equipeRepository->findBy([], ['scoreEquipe' => 'DESC'], 10);
         $equipesDt = [];
         foreach ($topEquipes as $index => $e) {
             $equipesDt[] = [
                 'rang' => $index + 1,
                 'nom' => $e->getNom(),
-                'scores' => $e->getScoreEquipe(),
-                'isMyTeam' => ($user->getEquipe() && $e->getId() === $user->getEquipe()->getId()),
+                'points' => $e->getScoreEquipe(),
+                'isMyTeam' => ($user->getEquipe() && $e->getId() === $user->getEquipe()->getId())
             ];
         }
 
-        return $this->json([
-            'usersRang' => $usersDt,
-            'equipesRang' => $equipesDt,
-            'monRang' => $this->findUserRank($user, $userRepository),
-            'monScore' => $user->getScoreTotal(),
+        return new JsonResponse([
+            'usersRank' => $usersDt,
+            'equipesRank' => $equipesDt,
+            'myPersonalRank' => $this->findUserRank($user, $userRepository),
         ]);
     }
 
-    private function findUserRank($user, UserRepository $userRepository): int
+    // fonction pour le rang du user
+    private function findUserRank(User $user, UserRepository $userRepository): int
     {
-        $allUsers = $userRepository->findBy([], ['scoreTotal' => 'DESC']);
-        foreach ($allUsers as $index => $u) {
-            if ($u->getId() === $user->getId()) return $index + 1;
+        $allUsersSorted = $userRepository->findBy([], ['scoreTotal' => 'DESC']);
+
+        foreach ($allUsersSorted as $index => $u) {
+            if ($u->getId() === $user->getId()) {
+                return $index + 1;
+            }
         }
+
         return 0;
     }
 }

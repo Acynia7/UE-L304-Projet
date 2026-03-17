@@ -10,6 +10,8 @@ import Profil from "./components/Profil/Profil";
 import Contact from "./components/Contact/Contact";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+import Footer from "./components/Footer/Footer";
+import MentionLegales from "./components/Footer/ml";
 
 export default function Router() {
     return (
@@ -25,7 +27,9 @@ export default function Router() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/privacy" element={<MentionLegales />} />
             </Routes>
+            <Footer />
         </BrowserRouter>
     );
 }

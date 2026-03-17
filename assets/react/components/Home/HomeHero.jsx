@@ -8,7 +8,7 @@ export default function HomeHero() {
                     <h1>EcoBattle</h1>
                 </div>
                 <div className="c-title c-title--sub-main">
-                    <p>Lorem ipsum dolor sit amet consectetur.</p>
+                    <p>L'écologie compétitive.</p>
                 </div>
             </div>
         </div>

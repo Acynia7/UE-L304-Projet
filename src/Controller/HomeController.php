@@ -43,6 +43,15 @@ final class HomeController extends AbstractController
             'user' => $userData
         ];
 
+    #[Route('/', name: 'app_home')]
+    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/challenge', name: 'app_challenge')]
+    #[Route('/classement', name: 'app_classement')]
+    #[Route('/profil', name: 'app_profil')]
+    #[Route('/privacy',name:'app_legalmention')]
+    public function index(): Response
+    {
+        return $this->render('base.html.twig');
         return $this->json($data);
     }
 }

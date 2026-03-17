@@ -84,6 +84,7 @@ button.navbar__link,
 .navbar__link
 {
     font-size: 16px;
+    font-weight: 400;
 }
 
 .navbar__link:hover,
@@ -110,6 +111,20 @@ button.navbar__link
     color: var(--secondary);
 }
 
+
+body {
+    &:has(.home__hero) {
+        .navbar__link,
+        .navbar__sub-link,
+        .navbar__arrow-phone {
+            color: var(--white);
+        }
+        .is-active
+        {
+            color: var(--secondary);
+        }
+    }
+}
 
 .is-active
 {

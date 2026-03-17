@@ -13,7 +13,11 @@
  */
 return [
     'app' => [
-        'path' => './assets/app.js',
+        'path' => './assets/react/app.js', // Le point d'entrée de ton React
+        'entrypoint' => true,
+    ],
+    'admin_js' => [
+        'path' => './assets/admin.js', // Ton fichier pour l'admin
         'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [

@@ -32,12 +32,13 @@ export default function Challenge() {
     const [activeCategorie, setActiveCategorie] = useState("all");
     const [defis, setDefis] = useState(flattenDefis(mockChallengeData));
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetch("/api/challenges")
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setDefis(flattenDefis(apiData)); })
-            .catch(() => {})
+            .catch(() => setError("Impossible de charger les defis"))
             .finally(() => setLoading(false));
     }, []);
 
@@ -54,6 +55,7 @@ export default function Challenge() {
     };
 
     if (loading) return <div className="challenge"><p>Chargement...</p></div>;
+    if (error) return <div className="challenge"><p className="challenge__error">{error}</p></div>;
 
     return (
         <div className="challenge">

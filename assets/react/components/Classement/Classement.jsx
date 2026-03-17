@@ -29,12 +29,13 @@ export default function Classement() {
     const [activeTab, setActiveTab] = useState("equipes");
     const [data, setData] = useState(mockLeaderboardData);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetch("/api/leaderboard")
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setData(apiData); })
-            .catch(() => {})
+            .catch(() => setError("Impossible de charger le classement"))
             .finally(() => setLoading(false));
     }, []);
 
@@ -55,6 +56,7 @@ export default function Classement() {
     const pointsToNext = nextPlayer ? nextPlayer.points - mePoints : 0;
 
     if (loading) return <div className="classement"><p>Chargement...</p></div>;
+    if (error) return <div className="classement"><p className="classement__error">{error}</p></div>;
 
     return (
         <div className="classement">

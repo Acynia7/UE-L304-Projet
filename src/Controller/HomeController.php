@@ -40,6 +40,7 @@ final class HomeController extends AbstractController
     #[Route('/challenge', name: 'app_challenge')]
     #[Route('/classement', name: 'app_classement')]
     #[Route('/profil', name: 'app_profil')]
+    #[Route('/privacy',name:'app_legalmention')]
     public function index(): Response
     {
         return $this->render('base.html.twig');

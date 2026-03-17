@@ -15,12 +15,13 @@ function getMotivation(pct) {
 export default function Dashboard() {
     const [data, setData] = useState(mockDashboardData);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetch("/api/dashboard")
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setData(apiData); })
-            .catch(() => {})
+            .catch(() => setError("Impossible de charger le tableau de bord"))
             .finally(() => setLoading(false));
     }, []);
 
@@ -30,6 +31,7 @@ export default function Dashboard() {
     const pctComplete = totalDefis > 0 ? Math.round((defisValides / totalDefis) * 100) : 0;
 
     if (loading) return <div className="dashboard"><p>Chargement...</p></div>;
+    if (error) return <div className="dashboard"><p className="dashboard__error">{error}</p></div>;
 
     return (
         <div className="dashboard">

@@ -1,0 +1,12 @@
+@for $i from 1 through 10 {
+  $value: $i * 10;
+
+  .spacing-#{$value} {
+    height: #{$value}px;
+  }
+}
+
+.home__image img
+{
+    width: stretch;
+}

@@ -9,10 +9,21 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
+    #[Route('/', name: 'app_home')]
+    #[Route('/about', name: 'app_about')]
+    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/challenge', name: 'app_challenge')]
+    #[Route('/classement', name: 'app_classement')]
+    #[Route('/profil', name: 'app_profil')]
+    #[Route('/contact', name: 'app_contact')]
+    #[Route('/login', name: 'app_login')]
+    #[Route('/register', name: 'app_register')]
+    public function index(): Response
+    {
+        return $this->render('base.html.twig');
+    }
 
-    // Format pour transmettre les données vers React
-
-    #[Route('/api/home', name: 'api_home', methods:['GET'])]
+    #[Route('/api/home', name: 'api_home', methods: ['GET'])]
     public function api(): Response
     {
         $user = $this->getUser();
@@ -27,13 +38,10 @@ final class HomeController extends AbstractController
         }
 
         $data = [
-            'message' => 'Hello from Symfony', 
-            'items' => [1,2,3],
+            'message' => 'Hello from Symfony',
+            'items' => [1, 2, 3],
             'user' => $userData
         ];
-        
-        return $this->json($data);
-    }
 
     #[Route('/', name: 'app_home')]
     #[Route('/dashboard', name: 'app_dashboard')]
@@ -44,6 +52,6 @@ final class HomeController extends AbstractController
     public function index(): Response
     {
         return $this->render('base.html.twig');
+        return $this->json($data);
     }
 }
-

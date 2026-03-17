@@ -2,38 +2,27 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Defi;
+use App\Entity\Preuve;
+use App\Entity\User;
+use App\Entity\DefiCategorie;
+use App\Entity\DefiDifficulte;
+use App\Entity\Equipe;
+use App\Entity\Message;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
     {
-        return parent::index();
-
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // 1.1) If you have enabled the "pretty URLs" feature:
-        // return $this->redirectToRoute('admin_user_index');
-        //
-        // 1.2) Same example but using the "ugly URLs" that were used in previous EasyAdmin versions:
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
-
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirectToRoute('...');
-        // }
-
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
+        
+        return $this->render('admin/dashboard.html.twig');
     }
 
     public function configureDashboard(): Dashboard
@@ -45,6 +34,18 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+        yield MenuItem::linkToCrud('Preuve', 'fas fa-list', Preuve::class);
+        yield MenuItem::linkToCrud('Utilisateur', 'fas fa-list', User::class);
+        yield MenuItem::linkToCrud('Equipe', 'fas fa-comments', Equipe::class);
+        yield MenuItem::linkToCrud('Défi', 'fas fa-list', Defi::class);
+        yield MenuItem::linkToCrud('Catégories', 'fa fa-tags', DefiCategorie::class);
+        yield MenuItem::linkToCrud('Difficultés', 'fa fa-bar-chart', DefiDifficulte::class);
+        yield MenuItem::linkToCrud('Messagerie', 'fas fa-comments', Message::class);
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+        ->addAssetMapperEntry('admin_js');
     }
 }

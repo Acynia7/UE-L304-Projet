@@ -1,33 +1,82 @@
-import React from "react";
-import { mockUser, mockEquipe, mockDefis, mockScores } from "../../mockData";
-import StatCard from "./StatCard";
+import React, { useState, useEffect } from "react";
+import { mockDashboardData } from "../../mockData";
 import EquipeResume from "./EquipeResume";
 import DefisRecents from "./DefisRecents";
 import DerniersScores from "./DerniersScores";
 import "./Dashboard.scss";
 
+function getMotivation(pct) {
+    if (pct === 100) return "Tous les defis sont completes, bravo ! 🎉";
+    if (pct >= 60) return "Beau parcours, continue comme ca ! 💪";
+    if (pct >= 30) return "Bon debut, encore quelques defis a relever !";
+    return "C'est le moment de passer a l'action ! 🚀";
+}
+
 export default function Dashboard() {
-    const user = mockUser;
-    const equipe = mockEquipe;
-    const defis = mockDefis;
-    const scores = mockScores;
+    const [data, setData] = useState(mockDashboardData);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetch("/api/dashboard")
+            .then((res) => (res.ok ? res.json() : null))
+            .then((apiData) => { if (apiData) setData(apiData); })
+            .catch(() => setError("Impossible de charger le tableau de bord"))
+            .finally(() => setLoading(false));
+    }, []);
+
+    const { user, defis, totalDefis, equipe, scores } = data;
+
+    const defisValides = defis.filter((d) => d.statut === "valide").length;
+    const pctComplete = totalDefis > 0 ? Math.round((defisValides / totalDefis) * 100) : 0;
+
+    if (loading) return <div className="dashboard"><p>Chargement...</p></div>;
+    if (error) return <div className="dashboard"><p className="dashboard__error">{error}</p></div>;
 
     return (
         <div className="dashboard">
-            <h1>Tableau de bord</h1>
-            <p className="welcome">Bienvenue, {user.nom} !</p>
-
-            <div className="stats-row">
-                <StatCard title="Score total" value={user.scoreTotal} unit="pts" icon="🏆" />
-                <StatCard title="CO2 économisé" value={user.totalCO2} unit="kg" icon="🌱" />
-                <StatCard title="Défis complétés" value={defis.filter(d => d.statut === "valide").length} unit={"/ " + defis.length} icon="✅" />
-                <StatCard title="Rang équipe" value="#1" icon="🥇" />
+            {/* hero gradient avec stats rapides */}
+            <div className="dashboard__hero">
+                <div className="dashboard__hero-text">
+                    <h1>Bonjour, {user.nom.split(" ")[0]} !</h1>
+                    <p>Pret a relever de nouveaux defis eco ?</p>
+                </div>
+                <div className="dashboard__hero-stats">
+                    <div className="dashboard__hero-stat">
+                        <span className="dashboard__hero-stat-value">{user.scoreTotal}</span>
+                        <span className="dashboard__hero-stat-label">points</span>
+                    </div>
+                    <div className="dashboard__hero-stat">
+                        <span className="dashboard__hero-stat-value">{user.totalCO2}</span>
+                        <span className="dashboard__hero-stat-label">kg CO2 economises</span>
+                    </div>
+                    <div className="dashboard__hero-stat">
+                        <span className="dashboard__hero-stat-value">{defisValides}/{totalDefis}</span>
+                        <span className="dashboard__hero-stat-label">defis completes</span>
+                    </div>
+                </div>
             </div>
 
-            <div className="content-grid">
+            {/* barre de progression */}
+            <div className="dashboard__progress">
+                <div className="dashboard__progress-header">
+                    <span className="dashboard__progress-title">Progression des defis</span>
+                    <span className="dashboard__progress-pct">{pctComplete}%</span>
+                </div>
+                <div className="dashboard__progress-bar">
+                    <div
+                        className="dashboard__progress-fill"
+                        style={{ width: `${pctComplete}%` }}
+                    />
+                </div>
+                <p className="dashboard__progress-msg">{getMotivation(pctComplete)}</p>
+            </div>
+
+            {/* contenu principal : defis + sidebar */}
+            <div className="dashboard__content">
                 <DefisRecents defis={defis} />
-                <div className="sidebar">
-                    <EquipeResume equipe={equipe} />
+                <div className="dashboard__sidebar">
+                    {equipe && <EquipeResume equipe={equipe} />}
                     <DerniersScores scores={scores} />
                 </div>
             </div>

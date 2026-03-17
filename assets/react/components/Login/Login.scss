@@ -1,0 +1,114 @@
+.auth-page 
+{
+    margin-top: 7vw;
+    display: flex;
+    flex-direction: row;
+    border-radius: 24px;
+    box-shadow: 0 0 3px 5px #adadad3b;
+}
+
+.auth-right,
+.auth-left
+{
+    width: 50%;
+    padding: 50px;
+}
+
+.auth-right
+{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.auth-left
+{
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    background: linear-gradient(270deg,var(--primary) 0%, var(--secondary) 100%);
+}
+
+.auth-form
+{
+    padding: 10px;
+
+}
+
+.auth-right label
+{
+    padding-bottom: 10px;
+}
+
+.auth-right input
+{
+    border-radius: 5px;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 35px;
+    border: #b9b9b9 solid 1px;
+}
+
+
+.auth-form button
+{
+    background: linear-gradient(270deg,var(--primary) 0%, var(--secondary) 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+    border-radius: 12px;
+    width: 100%;
+    height: 50px;
+    transition: all .5s;
+}
+
+.auth-form button:hover
+{
+    transition: all .5s;
+    background: linear-gradient(270deg,var(--primary) 30%, var(--secondary) 100%);
+}
+
+.sign-up button
+{
+    border: var(--secondary) 3px solid;
+    font-weight: 500;
+    font-size: 18px;
+    border-radius: 12px;
+    margin-top: 10px;
+    padding: 10px;
+
+    height: 45px;    
+    transition: all .5s;
+}
+
+.sign-up button:hover
+{
+    cursor: pointer;
+    background-color: white;
+}
+
+.sign-up
+{
+    text-align: center;
+}
+
+.login_img
+{
+    height: 300px;
+}
+
+/* Smartphones en mode Portrait (max 480px) */
+@media screen and (max-width: 780px) {
+    .auth-left
+    {
+        display: none;
+    }
+
+    .auth-right
+    {
+        width: 100%;
+        border-radius: 12px;
+    }
+}

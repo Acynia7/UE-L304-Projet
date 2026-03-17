@@ -1,113 +1,78 @@
-// donnees fictives pour le dev front (a remplacer par les appels API)
+// Donnees mock au format exact des reponses API Symfony
+// Permet de dev le front sans Docker, remplace par les vrais fetch dans chaque composant
 
-export const mockUser = {
-    id: 1,
-    nom: "Nathan Saccol",
-    email: "nathan.saccol@etu.unilim.fr",
-    scoreTotal: 1250,
-    totalCO2: 48.5,
-    role: "ROLE_USER",
-};
-
-export const mockEquipe = {
-    id: 1,
-    nom: "Les EcoWarriors",
-    scoreEquipe: 4820,
-    codeInvitation: "ECO-2026",
-    membres: [
-        { id: 1, nom: "Nathan Saccol", scoreTotal: 1250 },
-        { id: 2, nom: "Aurélien Piotte", scoreTotal: 1340 },
-        { id: 3, nom: "Safiya Jaouahir", scoreTotal: 1180 },
-        { id: 4, nom: "Emilie Valentin", scoreTotal: 1050 },
+// format /api/dashboard
+export const mockDashboardData = {
+    user: { nom: "Nathan Saccol", scoreTotal: 1250, totalCO2: 48.5 },
+    defis: [
+        { id: 1, titre: "Repas végétarien", statut: "valide", date: "07/03/2026" },
+        { id: 4, titre: "Douche express", statut: "valide", date: "06/03/2026" },
+        { id: 2, titre: "Transport doux", statut: "en_attente", date: "05/03/2026" },
+    ],
+    totalDefis: 5,
+    equipe: { nom: "Les EcoWarriors", score: 4820, membres: 4 },
+    scores: [
+        { defiTitre: "Repas végétarien", points: 50, date: "07/03" },
+        { defiTitre: "Douche express", points: 30, date: "06/03" },
+        { defiTitre: "Transport doux", points: 80, date: "05/03" },
     ],
 };
 
-export const mockDefis = [
-    {
-        id: 1,
-        titre: "Repas végétarien",
-        description: "Manger un repas 100% végétarien aujourd'hui",
-        point: 50,
-        economieCO2: 2.5,
-        categorie: "Alimentation",
-        difficulte: "Facile",
-        statut: "valide",
-    },
-    {
-        id: 2,
-        titre: "Transport doux",
-        description: "Se déplacer uniquement à pied ou à vélo aujourd'hui",
-        point: 80,
-        economieCO2: 4.2,
-        categorie: "Transport",
-        difficulte: "Moyen",
-        statut: "en_cours",
-    },
-    {
-        id: 3,
-        titre: "Zéro déchet",
-        description: "Ne produire aucun déchet plastique de la journée",
-        point: 100,
-        economieCO2: 3.8,
-        categorie: "Déchets",
-        difficulte: "Difficile",
-        statut: "a_faire",
-    },
-    {
-        id: 4,
-        titre: "Douche express",
-        description: "Prendre une douche de moins de 5 minutes",
-        point: 30,
-        economieCO2: 1.2,
-        categorie: "Eau",
-        difficulte: "Facile",
-        statut: "valide",
-    },
-    {
-        id: 5,
-        titre: "Éteindre les appareils",
-        description: "Éteindre tous les appareils en veille ce soir",
-        point: 40,
-        economieCO2: 1.8,
-        categorie: "Énergie",
-        difficulte: "Facile",
-        statut: "a_faire",
-    },
-];
+// format /api/challenges
+export const mockChallengeData = {
+    toDo: [
+        { id: 3, titre: "Zéro déchet", description: "Ne produire aucun déchet plastique de la journée", points: 100, economieCO2: 3.8, categorie: "Déchets", difficulte: "Difficile" },
+        { id: 5, titre: "Éteindre les appareils", description: "Éteindre tous les appareils en veille ce soir", points: 40, economieCO2: 1.8, categorie: "Énergie", difficulte: "Facile" },
+    ],
+    valid: [
+        { id: 1, titre: "Repas végétarien", description: "Manger un repas 100% végétarien aujourd'hui", points: 50, economieCO2: 2.5, categorie: "Alimentation", difficulte: "Facile" },
+        { id: 4, titre: "Douche express", description: "Prendre une douche de moins de 5 minutes", points: 30, economieCO2: 1.2, categorie: "Eau", difficulte: "Facile" },
+    ],
+    pending: [
+        { id: 2, titre: "Transport doux", description: "Se déplacer uniquement à pied ou à vélo aujourd'hui", points: 80, economieCO2: 4.2, categorie: "Transport", difficulte: "Moyen" },
+    ],
+};
 
-export const mockScores = [
-    { id: 1, valeur: 50, motif: "Repas végétarien", dateGain: "2026-03-07" },
-    { id: 2, valeur: 30, motif: "Douche express", dateGain: "2026-03-06" },
-    { id: 3, valeur: 80, motif: "Transport doux", dateGain: "2026-03-05" },
-];
+// format /api/leaderboard
+export const mockLeaderboardData = {
+    usersRank: [
+        { rang: 1, nom: "Aurélien Piotte", points: 1340, isMe: false },
+        { rang: 2, nom: "Nathan Saccol", points: 1250, isMe: true },
+        { rang: 3, nom: "Safiya Jaouahir", points: 1180, isMe: false },
+        { rang: 4, nom: "Emilie Valentin", points: 1050, isMe: false },
+        { rang: 5, nom: "Lucas Martin", points: 980, isMe: false },
+        { rang: 6, nom: "Clara Dupont", points: 920, isMe: false },
+        { rang: 7, nom: "Hugo Bernard", points: 870, isMe: false },
+        { rang: 8, nom: "Léa Moreau", points: 810, isMe: false },
+        { rang: 9, nom: "Thomas Petit", points: 750, isMe: false },
+        { rang: 10, nom: "Julie Robert", points: 690, isMe: false },
+    ],
+    equipesRank: [
+        { rang: 1, nom: "Les EcoWarriors", points: 4820, isMyTeam: true },
+        { rang: 2, nom: "Green Team", points: 4510, isMyTeam: false },
+        { rang: 3, nom: "Planet Savers", points: 3980, isMyTeam: false },
+        { rang: 4, nom: "Eco Fighters", points: 3720, isMyTeam: false },
+        { rang: 5, nom: "Nature First", points: 3450, isMyTeam: false },
+        { rang: 6, nom: "Terre Verte", points: 3200, isMyTeam: false },
+        { rang: 7, nom: "Les Recycleurs", points: 2980, isMyTeam: false },
+        { rang: 8, nom: "Zero Waste", points: 2750, isMyTeam: false },
+        { rang: 9, nom: "Climat Action", points: 2500, isMyTeam: false },
+        { rang: 10, nom: "Bio Squad", points: 2310, isMyTeam: false },
+    ],
+    myPersonalRank: 2,
+};
 
-export const mockClassement = [
-    { position: 1, nom: "Les EcoWarriors", score: 4820 },
-    { position: 2, nom: "Green Team", score: 4510 },
-    { position: 3, nom: "Planet Savers", score: 3980 },
-    { position: 4, nom: "Eco Fighters", score: 3720 },
-    { position: 5, nom: "Nature First", score: 3450 },
-    { position: 6, nom: "Terre Verte", score: 3200 },
-    { position: 7, nom: "Les Recycleurs", score: 2980 },
-    { position: 8, nom: "Zero Waste", score: 2750 },
-    { position: 9, nom: "Climat Action", score: 2500 },
-    { position: 10, nom: "Bio Squad", score: 2310 },
-];
+// format /api/profile
+export const mockProfileData = {
+    pseudo: "Nathan Saccol",
+    email: "nathan.saccol@etu.unilim.fr",
+    equipe: "Les EcoWarriors",
+    equipe_id: 1,
+    score_total: 1250,
+    nb_defis_releves: 3,
+};
 
-export const mockClassementUsers = [
-    { rang: 1, nom: "Aurélien Piotte", points: 1340, isMe: false },
-    { rang: 2, nom: "Nathan Saccol", points: 1250, isMe: true },
-    { rang: 3, nom: "Safiya Jaouahir", points: 1180, isMe: false },
-    { rang: 4, nom: "Emilie Valentin", points: 1050, isMe: false },
-    { rang: 5, nom: "Lucas Martin", points: 980, isMe: false },
-    { rang: 6, nom: "Clara Dupont", points: 920, isMe: false },
-    { rang: 7, nom: "Hugo Bernard", points: 870, isMe: false },
-    { rang: 8, nom: "Léa Moreau", points: 810, isMe: false },
-    { rang: 9, nom: "Thomas Petit", points: 750, isMe: false },
-    { rang: 10, nom: "Julie Robert", points: 690, isMe: false },
-];
-
-// badges et recompenses gamification
+// badges (pas d'API pour l'instant, front-only)
 export const mockBadges = [
     { id: 1, nom: "Premier pas", icon: "🌱", description: "Premier defi valide", obtenu: true },
     { id: 2, nom: "Team player", icon: "🤝", description: "Rejoindre une equipe", obtenu: true },

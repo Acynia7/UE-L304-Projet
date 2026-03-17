@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { mockUser, mockEquipe, mockDefis } from "../../mockData";
+import React, { useState, useEffect } from "react";
+import { mockChallengeData } from "../../mockData";
 import "./Challenge.scss";
 
-// labels affiches pour chaque statut
 const STATUT_LABELS = {
-    valide: "Valide",
-    en_cours: "En attente",
     a_faire: "A faire",
+    en_cours: "En attente",
+    valide: "Valides",
 };
 
 const TABS = [
@@ -15,24 +14,35 @@ const TABS = [
     { key: "valide", label: "Valides", icon: "✅" },
 ];
 
-// convertit "en_cours" en "en-cours" pour les classes CSS
 function cssStatut(statut) {
     return statut.replace("_", "-");
+}
+
+// transforme la reponse API { toDo, valid, pending } en tableau unifie avec statut
+function flattenDefis(apiData) {
+    return [
+        ...(apiData.toDo || []).map((d) => ({ ...d, statut: "a_faire" })),
+        ...(apiData.pending || []).map((d) => ({ ...d, statut: "en_cours" })),
+        ...(apiData.valid || []).map((d) => ({ ...d, statut: "valide" })),
+    ];
 }
 
 export default function Challenge() {
     const [activeTab, setActiveTab] = useState("a_faire");
     const [activeCategorie, setActiveCategorie] = useState("all");
+    const [defis, setDefis] = useState(flattenDefis(mockChallengeData));
+    const [loading, setLoading] = useState(true);
 
-    // TODO: remplacer par fetch API quand le back sera branche
-    const user = mockUser;
-    const equipe = mockEquipe;
-    const defis = mockDefis;
+    useEffect(() => {
+        fetch("/api/challenges")
+            .then((res) => (res.ok ? res.json() : null))
+            .then((apiData) => { if (apiData) setDefis(flattenDefis(apiData)); })
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
 
-    // categories uniques extraites des defis
-    const categories = ["all", ...new Set(defis.map((d) => d.categorie))];
+    const categories = ["all", ...new Set(defis.map((d) => d.categorie).filter(Boolean))];
 
-    // tri des defis par statut puis filtre par categorie
     const defisFiltres = defis
         .filter((d) => d.statut === activeTab)
         .filter((d) => activeCategorie === "all" || d.categorie === activeCategorie);
@@ -42,6 +52,8 @@ export default function Challenge() {
         en_cours: defis.filter((d) => d.statut === "en_cours").length,
         valide: defis.filter((d) => d.statut === "valide").length,
     };
+
+    if (loading) return <div className="challenge"><p>Chargement...</p></div>;
 
     return (
         <div className="challenge">
@@ -53,12 +65,12 @@ export default function Challenge() {
                 </div>
                 <div className="challenge__hero-scores">
                     <div className="challenge__hero-badge">
-                        <span className="challenge__hero-badge-value">{user.scoreTotal}</span>
-                        <span className="challenge__hero-badge-label">pts perso</span>
+                        <span className="challenge__hero-badge-value">{defis.length}</span>
+                        <span className="challenge__hero-badge-label">defis total</span>
                     </div>
                     <div className="challenge__hero-badge">
-                        <span className="challenge__hero-badge-value">{equipe.scoreEquipe}</span>
-                        <span className="challenge__hero-badge-label">pts equipe</span>
+                        <span className="challenge__hero-badge-value">{countsByStatut.valide}</span>
+                        <span className="challenge__hero-badge-label">valides</span>
                     </div>
                 </div>
             </div>
@@ -103,10 +115,12 @@ export default function Challenge() {
                         <div key={defi.id} className={`challenge__card ${cssStatut(defi.statut)}`}>
                             <div className="challenge__card-top">
                                 <div className="challenge__card-meta">
-                                    <span className="challenge__card-categorie">{defi.categorie}</span>
-                                    <span className={`challenge__card-difficulte ${defi.difficulte.toLowerCase()}`}>
-                                        {defi.difficulte}
-                                    </span>
+                                    {defi.categorie && <span className="challenge__card-categorie">{defi.categorie}</span>}
+                                    {defi.difficulte && (
+                                        <span className={`challenge__card-difficulte ${defi.difficulte.toLowerCase()}`}>
+                                            {defi.difficulte}
+                                        </span>
+                                    )}
                                 </div>
                                 <span className={`challenge__card-statut ${cssStatut(defi.statut)}`}>
                                     {STATUT_LABELS[defi.statut]}
@@ -116,8 +130,8 @@ export default function Challenge() {
                             <p className="challenge__card-desc">{defi.description}</p>
                             <div className="challenge__card-bottom">
                                 <div className="challenge__card-rewards">
-                                    <span className="challenge__card-points">+{defi.point} pts</span>
-                                    <span className="challenge__card-co2">-{defi.economieCO2} kg CO2</span>
+                                    <span className="challenge__card-points">+{defi.points} pts</span>
+                                    {defi.economieCO2 && <span className="challenge__card-co2">-{defi.economieCO2} kg CO2</span>}
                                 </div>
                                 {defi.statut === "a_faire" && (
                                     <button className="challenge__card-btn">Soumettre une preuve</button>

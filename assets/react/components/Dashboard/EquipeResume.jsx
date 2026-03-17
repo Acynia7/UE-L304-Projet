@@ -1,19 +1,12 @@
 import React from "react";
 
+// format API /api/dashboard : equipe = { nom, score, membres (count) }
 export default function EquipeResume({ equipe }) {
     return (
         <div className="equipe-resume">
             <h2>Mon équipe : {equipe.nom}</h2>
-            <p className="score">Score d'équipe : <strong>{equipe.scoreEquipe} pts</strong></p>
-            <h3>Membres</h3>
-            <ul>
-                {equipe.membres.map((m) => (
-                    <li key={m.id}>
-                        <span>{m.nom}</span>
-                        <span className="pts">{m.scoreTotal} pts</span>
-                    </li>
-                ))}
-            </ul>
+            <p className="score">Score d'équipe : <strong>{equipe.score} pts</strong></p>
+            <p className="membres">{equipe.membres} membre{equipe.membres > 1 ? "s" : ""}</p>
         </div>
     );
 }

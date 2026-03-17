@@ -1,11 +1,10 @@
-import React from "react";
-import { mockUser, mockEquipe, mockDefis, mockScores } from "../../mockData";
+import React, { useState, useEffect } from "react";
+import { mockDashboardData } from "../../mockData";
 import EquipeResume from "./EquipeResume";
 import DefisRecents from "./DefisRecents";
 import DerniersScores from "./DerniersScores";
 import "./Dashboard.scss";
 
-// messages selon la progression
 function getMotivation(pct) {
     if (pct === 100) return "Tous les defis sont completes, bravo ! 🎉";
     if (pct >= 60) return "Beau parcours, continue comme ca ! 💪";
@@ -14,14 +13,23 @@ function getMotivation(pct) {
 }
 
 export default function Dashboard() {
-    // TODO: remplacer par fetch API quand le back sera branche
-    const user = mockUser;
-    const equipe = mockEquipe;
-    const defis = mockDefis;
-    const scores = mockScores;
+    const [data, setData] = useState(mockDashboardData);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("/api/dashboard")
+            .then((res) => (res.ok ? res.json() : null))
+            .then((apiData) => { if (apiData) setData(apiData); })
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
+
+    const { user, defis, totalDefis, equipe, scores } = data;
 
     const defisValides = defis.filter((d) => d.statut === "valide").length;
-    const pctComplete = Math.round((defisValides / defis.length) * 100);
+    const pctComplete = totalDefis > 0 ? Math.round((defisValides / totalDefis) * 100) : 0;
+
+    if (loading) return <div className="dashboard"><p>Chargement...</p></div>;
 
     return (
         <div className="dashboard">
@@ -41,7 +49,7 @@ export default function Dashboard() {
                         <span className="dashboard__hero-stat-label">kg CO2 economises</span>
                     </div>
                     <div className="dashboard__hero-stat">
-                        <span className="dashboard__hero-stat-value">{defisValides}/{defis.length}</span>
+                        <span className="dashboard__hero-stat-value">{defisValides}/{totalDefis}</span>
                         <span className="dashboard__hero-stat-label">defis completes</span>
                     </div>
                 </div>
@@ -66,7 +74,7 @@ export default function Dashboard() {
             <div className="dashboard__content">
                 <DefisRecents defis={defis} />
                 <div className="dashboard__sidebar">
-                    <EquipeResume equipe={equipe} />
+                    {equipe && <EquipeResume equipe={equipe} />}
                     <DerniersScores scores={scores} />
                 </div>
             </div>

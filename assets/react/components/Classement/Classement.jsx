@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { mockUser, mockClassement, mockClassementUsers } from "../../mockData";
+import React, { useState, useEffect } from "react";
+import { mockLeaderboardData } from "../../mockData";
 import "./Classement.scss";
 
 const TABS = [
@@ -11,7 +11,7 @@ const TABS = [
 const MEDALS = ["🥇", "🥈", "🥉"];
 const PODIUM_ORDER = [1, 0, 2]; // affichage: 2e, 1er, 3e (le 1er au centre)
 
-function PodiumItem({ entry, rank, isTeam }) {
+function PodiumItem({ entry, rank }) {
     const isFirst = rank === 0;
     return (
         <div className={`classement__podium-item ${isFirst ? "classement__podium-item--first" : ""}`}>
@@ -19,9 +19,7 @@ function PodiumItem({ entry, rank, isTeam }) {
                 {MEDALS[rank]}
             </div>
             <span className="classement__podium-name">{entry.nom}</span>
-            <span className="classement__podium-score">
-                {isTeam ? entry.score : entry.points} pts
-            </span>
+            <span className="classement__podium-score">{entry.points} pts</span>
             <div className={`classement__podium-bar classement__podium-bar--${rank + 1}`} />
         </div>
     );
@@ -29,12 +27,20 @@ function PodiumItem({ entry, rank, isTeam }) {
 
 export default function Classement() {
     const [activeTab, setActiveTab] = useState("equipes");
+    const [data, setData] = useState(mockLeaderboardData);
+    const [loading, setLoading] = useState(true);
 
-    // TODO: remplacer par fetch API quand le back sera branche
-    const user = mockUser;
-    const monRang = mockClassementUsers.findIndex((u) => u.isMe) + 1;
+    useEffect(() => {
+        fetch("/api/leaderboard")
+            .then((res) => (res.ok ? res.json() : null))
+            .then((apiData) => { if (apiData) setData(apiData); })
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
 
-    const currentData = activeTab === "equipes" ? mockClassement : mockClassementUsers;
+    const { usersRank, equipesRank, myPersonalRank } = data;
+
+    const currentData = activeTab === "equipes" ? equipesRank : usersRank;
     const isTeam = activeTab === "equipes";
 
     // top 3 pour le podium, reste pour le tableau
@@ -42,10 +48,13 @@ export default function Classement() {
     const rest = currentData.slice(3);
 
     // calcul progression vers le rang suivant
-    const meIdx = mockClassementUsers.findIndex((u) => u.isMe);
-    const mePoints = mockClassementUsers[meIdx]?.points || 0;
-    const nextPlayer = meIdx > 0 ? mockClassementUsers[meIdx - 1] : null;
+    const me = usersRank.find((u) => u.isMe);
+    const mePoints = me?.points || 0;
+    const meIdx = usersRank.findIndex((u) => u.isMe);
+    const nextPlayer = meIdx > 0 ? usersRank[meIdx - 1] : null;
     const pointsToNext = nextPlayer ? nextPlayer.points - mePoints : 0;
+
+    if (loading) return <div className="classement"><p>Chargement...</p></div>;
 
     return (
         <div className="classement">
@@ -57,8 +66,8 @@ export default function Classement() {
                 </div>
                 <div className="classement__hero-rank">
                     <span className="classement__hero-rank-label">Mon rang</span>
-                    <span className="classement__hero-rank-value">#{monRang}</span>
-                    <span className="classement__hero-rank-pts">{user.scoreTotal} pts</span>
+                    <span className="classement__hero-rank-value">#{myPersonalRank}</span>
+                    <span className="classement__hero-rank-pts">{mePoints} pts</span>
                 </div>
             </div>
 
@@ -97,7 +106,6 @@ export default function Classement() {
                         key={idx}
                         entry={top3[idx]}
                         rank={idx}
-                        isTeam={isTeam}
                     />
                 ))}
             </div>
@@ -106,23 +114,19 @@ export default function Classement() {
             {rest.length > 0 && (
                 <div className="classement__table">
                     {rest.map((entry) => {
-                        const rank = isTeam ? entry.position : entry.rang;
-                        const score = isTeam ? entry.score : entry.points;
-                        const isMe = isTeam
-                            ? entry.nom === "Les EcoWarriors"
-                            : entry.isMe;
+                        const isMe = isTeam ? entry.isMyTeam : entry.isMe;
 
                         return (
                             <div
-                                key={rank}
+                                key={entry.rang}
                                 className={`classement__row ${isMe ? "classement__row--me" : ""}`}
                             >
-                                <span className="classement__row-rang">{rank}</span>
+                                <span className="classement__row-rang">{entry.rang}</span>
                                 <span className="classement__row-nom">
                                     {entry.nom}
                                     {isMe && <span className="classement__row-badge">{isTeam ? "Mon equipe" : "Moi"}</span>}
                                 </span>
-                                <span className="classement__row-score">{score} pts</span>
+                                <span className="classement__row-score">{entry.points} pts</span>
                             </div>
                         );
                     })}

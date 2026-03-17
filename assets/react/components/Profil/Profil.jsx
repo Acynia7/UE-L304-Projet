@@ -5,13 +5,14 @@ import "./Profil.scss";
 export default function Profil() {
     const [profile, setProfile] = useState(mockProfileData);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const badges = mockBadges; // pas d'API badges pour l'instant
 
     useEffect(() => {
         fetch("/api/profile")
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setProfile(apiData); })
-            .catch(() => {})
+            .catch(() => setError("Impossible de charger le profil"))
             .finally(() => setLoading(false));
     }, []);
 
@@ -19,6 +20,7 @@ export default function Profil() {
     const hasTeam = profile.equipe && profile.equipe !== "Aucune équipe";
 
     if (loading) return <div className="profil"><p>Chargement...</p></div>;
+    if (error) return <div className="profil"><p className="profil__error">{error}</p></div>;
 
     return (
         <div className="profil">

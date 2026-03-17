@@ -8,7 +8,7 @@
     width: 100%;
     height: 100%;
     
-    background-image: url(../../../images/fond-par-defaut.png);
+    background-image: url(../../../images/hero-dusk.png);
     background-size: cover;
 
     z-index: -1;
@@ -20,20 +20,30 @@
     overflow: hidden;
 }
 
-.home__image img
-{
-    width: stretch;
-}
-
 .home__content
 {
     align-content: center;
 }
 
-@for $i from 1 through 10 {
-  $value: $i * 10;
-
-  .spacing-#{$value} {
-    height: #{$value}px;
-  }
+.home__hero .c-title--main
+{
+    position: relative;
 }
+
+.home__hero .c-title--main::before
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 190px;
+    width: 430px;
+    background-color: var(--secondary);
+    opacity: .5;
+}
+
+.home__hero .c-title
+{
+    box-shadow: inset;
+}
+

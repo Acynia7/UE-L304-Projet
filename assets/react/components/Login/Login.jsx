@@ -14,28 +14,30 @@ export default function Login() {
         setError(null);
 
         try {
-            const form = new URLSearchParams();
-            form.append("_username", username);
-            form.append("_password", password);
-
-            const response = await fetch("/login", {
+            const response = await fetch("http://127.0.0.1:8000/api/login", { 
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: form.toString(),
-                redirect: "manual",
+                headers: { 
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify({
+                    email: username, 
+                    password: password
+                }),
+                credentials: 'include',
             });
 
             if (response.ok) {
+                const data = await response.json();
                 navigate("/dashboard");
             } else {
-                setError("Échec de la connexion");
+                const errorData = await response.json();
+                setError(errorData.error || "Identifiants invalides");
             }
         } catch (err) {
             setError("Impossible de contacter le serveur");
             console.error(err);
         }
     };
-
     return (
         <div className="auth-page o-container--centered">
             <div className="auth-left">

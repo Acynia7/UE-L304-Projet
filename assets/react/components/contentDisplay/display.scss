@@ -1,12 +1,95 @@
 @for $i from 1 through 10 {
-  $value: $i * 10;
-
-  .spacing-#{$value} {
-    height: #{$value}px;
-  }
+    $value: $i * 10;
+    .spacing-#{$value} {
+        height: #{$value}px;
+    }
 }
 
 .home__image img
 {
     width: stretch;
+}
+
+
+// Team display
+.team
+{
+    --team-color:#bbb;
+    margin: 50px 0;
+    padding: 30px;
+    border-top: var(--team-color) 1px solid;
+    border-bottom: var(--team-color) 1px solid;
+}
+
+.team--container
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.team--row
+{
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    align-self: center;
+}
+
+.team--box
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    align-items: center;
+    width: 300px;
+}
+
+.team--box span
+{
+    color: black;
+}
+
+.team--box svg
+{
+    width: 100px;
+    height: auto;
+}
+
+// Ariane display
+.ariane
+{
+    text-align: center;
+    height: 350px;
+    align-content: center;
+    justify-self: center;
+}
+
+.ariane span
+{
+    font-size: 35px;
+    padding:  10px 15px;
+    background-color: rgb(207, 207, 207);
+    border-radius: 100px;
+    color: var(--grey);
+}
+
+.ariane h1
+{
+    font-weight: 500;
+    color: var(--secondary);
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.ariane--path
+{
+    position: relative;
+}
+
+// center content display
+
+.cc
+{
+    text-align: center;
 }

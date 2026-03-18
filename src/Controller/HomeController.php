@@ -19,6 +19,7 @@ final class HomeController extends AbstractController
     #[Route('/login', name: 'app_login')]
     #[Route('/register', name: 'app_register')]
     #[Route('/privacy',name:'app_legalmention')]
+    #[Route('/logout',name:'app_logout')]
     public function index(): Response
     {
         return $this->render('base.html.twig');

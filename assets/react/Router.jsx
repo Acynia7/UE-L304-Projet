@@ -12,6 +12,7 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import Footer from "./components/Footer/Footer";
 import MentionLegales from "./components/Footer/ml";
+import Logout from "./components/Logout/Logout";
 
 export default function Router() {
     return (
@@ -28,6 +29,7 @@ export default function Router() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/privacy" element={<MentionLegales />} />
+                <Route path="/logout" element={<Logout />}/>
             </Routes>
             <Footer />
         </BrowserRouter>

@@ -15,23 +15,25 @@ export default function Register() {
         setError(null);
 
         try {
-            // send registration data as urlencoded form fields
-            const form = new URLSearchParams();
-            form.append("username", username);
-            form.append("email", email);
-            form.append("password", password);
-
-            const response = await fetch("/register", {
+            const registrationData = {
+                nom: username, 
+                email: email,
+                password: password
+            };
+            const response = await fetch("http://127.0.0.1:8000/api/register", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: form.toString(),
-                redirect: "manual",
+                headers: { 
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify(registrationData),
             });
+
+            const data = await response.json();
 
             if (response.ok) {
                 navigate("/login");
             } else {
-                setError("Échec de l'inscription");
+                setError(data.error || "Échec de l'inscription");
             }
         } catch (err) {
             setError("Impossible de contacter le serveur");

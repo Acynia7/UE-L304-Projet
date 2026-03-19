@@ -40,7 +40,7 @@ class MessageCrudController extends AbstractCrudController
     {
         return [
             DateTimeField::new('createdAt', 'Date d\'envoi'),
-            AssociationField::new('utilisateur', 'Auteur'),
+            AssociationField::new('auteur', 'Auteur'),
             AssociationField::new('equipe', 'Équipe'),
             TextField::new('contenu', 'Message'),
         ];

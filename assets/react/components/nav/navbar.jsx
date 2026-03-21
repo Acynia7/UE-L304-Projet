@@ -5,7 +5,6 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import "./navbar.scss";
 
 const pages = [
-
     {
         name: "Home",
         path: "/"
@@ -15,89 +14,72 @@ const pages = [
         path: "/about"
     },
     {
-        name: "dashboard",
-        sub_items:
-        {
-            dashboard:{
+        name: "dashboard", // Notez que le nom est en minuscule ici
+        sub_items: {
+            dashboard: {
                 name: "Dashboard",
-                path: "/dashboard"                
+                path: "/dashboard"
             },
-            challenge:{
+            challenge: {
                 name: "Challenge",
                 path: "/challenge"
             },
-            classement:{
-                name: "Classement", 
+            classement: {
+                name: "Classement",
                 path: "/classement"
             },
-            profil:{
+            profil: {
                 name: "Profil",
                 path: "/profil"
-            },    
+            },
         },
     },
-    {
-        name: "Contact",
-        path: "/contact"
-    }
 ];
 
 function navResponsive() {
     var elementClass = document.querySelector("nav");
     var body = document.querySelector("html");
 
-    if (elementClass.className === "navbar__element")
-    {
+    if (elementClass.className === "navbar__element") {
         elementClass.className += " navbar__element--responsive";
         body.className += " of_hidden";
     }
-    else
-    {
+    else {
         elementClass.className = "navbar__element";
         body.className = "";
     }
-}    
+}
 
 function openList() {
     var elementClass = document.querySelector(".navbar__sub-list");
-    if (elementClass.className === "navbar__sub-list")
-    {
+    if (elementClass.className === "navbar__sub-list") {
         elementClass.className += " navbar__sub-list--open";
     }
-    else
-    {
+    else {
         elementClass.className = "navbar__sub-list";
     }
 }
 
-function getPresence() 
-{
+function getPresence() {
     const width = window.innerWidth;
-
-    return width >900
-    ? 1
-    : 0
+    return width > 900 ? 1 : 0;
 }
 
-export default function Navbar({...props}) {
-    
+export default function Navbar({ ...props }) {
     const [presence, setPresence] = useState(getPresence());
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const location = useLocation();
 
-    useEffect(function()
-    {
+    useEffect(function () {
         window.addEventListener('resize', definePresence);
-
         return () => window.removeEventListener('resize', definePresence);
 
-        function definePresence(e)
-        {
+        function definePresence(e) {
             setPresence(getPresence());
         }
-    },
-    []);
+    }, []);
 
-    useEffect(function()
-    {
+    useEffect(function () {
         const handleScroll = () => {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 0) {
@@ -108,21 +90,8 @@ export default function Navbar({...props}) {
         };
 
         window.addEventListener('scroll', handleScroll);
-
         return () => window.removeEventListener('scroll', handleScroll);
-    },
-    []);
-
-    function ArrowDownResponsive()
-    {
-        (presence == 1)
-        ? openList()
-        : undefined
-    }
-    
-    const location = useLocation();
-
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    }, []);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -132,89 +101,95 @@ export default function Navbar({...props}) {
                     setIsAuthenticated(false);
                     return;
                 }
-
                 const data = await response.json();
                 setIsAuthenticated(Boolean(data?.user?.email));
             } catch (err) {
                 setIsAuthenticated(false);
             }
         };
-
         fetchUser();
     }, [location.pathname]);
 
-    const nav_items = pages.map(function (page)
-    {
-        const items = Object.keys(page.sub_items || { } ).map(function(sub_item_name)
-        {
-            const sub_item = page.sub_items[sub_item_name]
+    function ArrowDownResponsive() {
+        (presence == 1) ? openList() : undefined;
+    }
+
+    // --- LOGIQUE DE FILTRAGE ET GÉNÉRATION DES ITEMS ---
+    const nav_items = pages
+        .filter(page => {
+            // Si c'est le dashboard et que l'utilisateur n'est pas authentifié, on masque
+            if (page.name.toLowerCase() === "dashboard" && !isAuthenticated) {
+                return false;
+            }
+            return true;
+        })
+        .map(function (page) {
+            const items = Object.keys(page.sub_items || {}).map(function (sub_item_name) {
+                const sub_item = page.sub_items[sub_item_name];
+
+                return (
+                    <li key={sub_item_name} className="navbar__sub-item">
+                        <a href={sub_item.path}
+                            className={
+                                location.pathname == sub_item.path
+                                    ? 'navbar__sub-link is-active'
+                                    : 'navbar__sub-link'
+                            }
+                        >
+                            {sub_item.name}
+                        </a>
+                    </li>
+                );
+            });
+
+            if (!page.path) {
+                return (
+                    <li key={page.name} className="navbar__item">
+                        <button type="button"
+                            onClick={ArrowDownResponsive}
+                            className={
+                                location.pathname == page.path
+                                    ? 'navbar__link is-active'
+                                    : 'navbar__link'
+                            }
+                        >
+                            {page.name}
+                        </button>
+                        <button type="button"
+                            onClick={openList}
+                            className="navbar__arrow-phone--button"
+                        >
+                            <div className="navbar__arrow-phone">
+                                <RiArrowDownSLine />
+                            </div>
+                        </button>
+                        <ul className="navbar__sub-list">
+                            {items}
+                        </ul>
+                    </li>
+                );
+            }
 
             return (
-                <li key={ sub_item_name} className="navbar__sub-item">
-                    <a key={ sub_item_name } href={ sub_item.path }
-                        className= {
-                            location.pathname == sub_item.path
-                            ? 'navbar__sub-link is-active'
-                            : 'navbar__sub-link'
+                <li key={page.name} className="navbar__item">
+                    <Link to={page.path}
+                        className={
+                            location.pathname == page.path
+                                ? 'navbar__link is-active'
+                                : 'navbar__link'
                         }
-                        >
-
-                        {sub_item.name}
-                    </a>
+                    >
+                        {page.name}
+                    </Link>
                 </li>
             );
         });
-
-        if(!page.path){
-            return (
-                <li key={ page.name } className="navbar__item">
-                    <button type="button"
-                        key={ page.name }
-                        onClick={ ArrowDownResponsive }
-                        className={
-                            location.pathname == page.path
-                            ? 'navbar__link is-active'
-                            : 'navbar__link'
-                        }
-                        >
-
-                        {page.name}
-                    </button>
-                    <button type="button"
-                        onClick={ openList }
-                        className="navbar__arrow-phone--button"
-                    >
-                        <div className="navbar__arrow-phone">
-                            <RiArrowDownSLine />
-                        </div>
-                    </button>
-                    <ul className="navbar__sub-list">
-                        { items }
-                    </ul>
-                </li>
-            );
-        }
-        return(
-            <li key={ page.name } className="navbar__item">
-                <Link key={page.name} to={ page.path }
-                    className={
-                        location.pathname == page.path
-                        ? 'navbar__link is-active'
-                        : 'navbar__link'
-                    }
-                    >
-                    { page.name }
-                    { items }
-                </Link>
-            </li>
-        );
-    });
 
     return (
         <div className="navbar">
             <div className="navbar__responsive-open">
                 <button type="button"
-                    onClick={ navResponsive }
+                    onClick={navResponsive}
                     className="navbar__responsive-open-button"
                 >
                     <IoMenu />
@@ -222,18 +197,19 @@ export default function Navbar({...props}) {
             </div>
             <div className="navbar__container">
                 <nav className="navbar__element">
-                    {/* <div className="navbar__responsive-logo">
-                        <Image />
-                    </div> */}
                     <div className="navbar__responsive-close">
-                        <button type="button" onClick={ navResponsive }>
+                        <button type="button" onClick={navResponsive}>
                             <IoClose />
                         </button>
                     </div>
                     <ul className="navbar__list">
+                        {nav_items}
 
-                        { nav_items }
-                        {!isAuthenticated && (
+                        {isAuthenticated ? (
+                            <li className="navbar__item">
+                                <a href="/logout" className="navbar__link">Déconnexion</a>
+                            </li>
+                        ) : (
                             <li className="navbar__item">
                                 <a href="/login" className="navbar__link">Connexion</a>
                             </li>
@@ -242,5 +218,5 @@ export default function Navbar({...props}) {
                 </nav>
             </div>
         </div>
-    )
+    );
 }

@@ -2,7 +2,7 @@ import './About.scss';
 
 export default function ContactForm() {
     return (
-        <section className="contact-section o-container--centered">
+        <section className="contact-section o-container--centered" id='contact-us'>
             <div className="contact-card">
                 <div className="contact-card__info">
                     <span className="about-data__span">CONTACTEZ-NOUS</span>

@@ -1,6 +1,9 @@
+import Ariane from "../contentDisplay/Ariane";
+
 export default function MentionLegales(){
     return (
         <div className="ml o-container--centered">
+            <Ariane title='Mentions Légales' />
             <div className="c-title">
                 <h1>Mentions Légales - EcoBattle</h1>
             </div>

@@ -33,17 +33,15 @@
 .home__hero .c-title--main::before
 {
     content: "";
+
     position: absolute;
+
     top: 0;
-    left: 0;
+    left: -5px;
     height: 190px;
-    width: 430px;
+    width: 435px;
+
     background-color: var(--secondary);
+    
     opacity: .5;
 }
-
-.home__hero .c-title
-{
-    box-shadow: inset;
-}
-

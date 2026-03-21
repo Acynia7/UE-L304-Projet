@@ -35,7 +35,7 @@ export default function Challenge() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch("/api/challenges")
+        fetch("/api/challenges", { credentials: "include" })
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setDefis(flattenDefis(apiData)); })
             .catch(() => setError("Impossible de charger les defis"))

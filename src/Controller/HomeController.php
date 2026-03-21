@@ -15,7 +15,6 @@ final class HomeController extends AbstractController
     #[Route('/challenge', name: 'app_challenge')]
     #[Route('/classement', name: 'app_classement')]
     #[Route('/profil', name: 'app_profil')]
-    #[Route('/contact', name: 'app_contact')]
     #[Route('/login', name: 'app_login')]
     #[Route('/register', name: 'app_register')]
     #[Route('/privacy',name:'app_legalmention')]

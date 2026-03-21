@@ -123,8 +123,16 @@ body {
         {
             color: var(--secondary);
         }
+        &:has(.navbar-scrolled) {
+            .navbar__link,
+            .navbar__sub-link,
+            .navbar__arrow-phone {
+                color: var(--white);
+            }
+        }
     }
 }
+
 
 .is-active
 {

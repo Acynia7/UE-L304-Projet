@@ -1,3 +1,5 @@
+@import "../variables";
+
 @for $i from 1 through 10 {
     $value: $i * 10;
     .spacing-#{$value} {
@@ -21,10 +23,36 @@
     border-bottom: var(--team-color) 1px solid;
 }
 
+.team__icon {
+    width: 70px;
+    height: 70px;
+    display: grid;         
+    place-content: center;
+    text-align: center;
+    border-radius: 100px;
+    font-size: 33px;
+    font-weight: 600;
+    color: white;
+    background: none;      
+
+    &.blue {
+        background: linear-gradient(170deg, #17A4A4 0%, #0D8484 100%);
+    }
+
+    &.green {
+        background: linear-gradient(170deg, #6DBE63 0%, #98D14B 100%);
+    }
+
+    &.orange {
+        background: linear-gradient(170deg, #F29F23 0%, #db8834 100%);
+    }
+}
+
 .team--container
 {
     display: flex;
     flex-direction: column;
+    gap: 35px;
 }
 
 .team--row
@@ -40,14 +68,26 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-
     align-items: center;
     width: 300px;
+    background: white;
+    padding: 27px;
+    border-radius: 16px;
+    height: 245px;
+    width: 409px;
 }
 
 .team--box span
 {
     color: black;
+}
+
+.team__span
+{
+    background-color: #E8F7F7;
+    color: #23AEAD !important;
+    padding: 3px 6px;
+    border-radius: 15px;
 }
 
 .team--box svg
@@ -63,28 +103,44 @@
     height: 350px;
     align-content: center;
     justify-self: center;
+    background: linear-gradient(270deg,var(--primary) 0%, var(--secondary) 100%);
+    width: 100%;
+    gap: 10px;
 }
 
 .ariane span
 {
-    font-size: 35px;
-    padding:  10px 15px;
-    background-color: rgb(207, 207, 207);
+    font-size: 18px;
+    padding: 3px 20px 7px 20px;
+    background-color: rgb(255 255 255 / 16%);
     border-radius: 100px;
-    color: var(--grey);
+    color: var(--white);
+    border: var(--white) 1px solid;
 }
 
 .ariane h1
 {
     font-weight: 500;
-    color: var(--secondary);
+    color: var(--white);
     font-size: 50px;
-    margin-bottom: 20px;
+}
+
+.ariane .c-title
+{
+    place-self: center;
+    
+}
+
+.ariane .c-content 
+{
+    padding: 0;
+    color: var(--white);
 }
 
 .ariane--path
 {
     position: relative;
+    margin-bottom: 20px;
 }
 
 // center content display

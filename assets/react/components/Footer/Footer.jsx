@@ -30,7 +30,7 @@ export default function Footer(){
                 <div className="footer--col-2">
                     <h2>A propos du projet</h2>
                     <div className="footer--link">
-                        <a href="/contact-us"><button>Nous contacter</button></a>
+                        <a href="/about#contact-us"><button>Nous contacter</button></a>
                         <a href="/about"><button>A propos</button></a>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
 import './display.scss';
-import pic from '../../../images/fond-par-defaut.png';
-export default function SideContentR({alt,children}) {
+import '../_components.scss';
+import defaultPic from '../../../images/fond-par-defaut.png';
+
+export default function SideContentR({ alt, children, imageSrc }) {
     
     return (
         <>
@@ -8,10 +10,10 @@ export default function SideContentR({alt,children}) {
                 <div className="o-container o-container--centered">
                     <div className="c-flex--row-r-responsive">
                         <div className="home__content c-content w50r">
-                            <p>{children}</p>
+                            {children}
                         </div>
                         <div className="home__image w50r">
-                            <img src={pic} alt={alt} />
+                            <img src={imageSrc || defaultPic} alt={alt} />
                         </div>
                     </div>
                 </div>

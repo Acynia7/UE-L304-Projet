@@ -32,7 +32,7 @@ export default function Classement() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch("/api/leaderboard")
+        fetch("/api/leaderboard", { credentials: "include" })
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setData(apiData); })
             .catch(() => setError("Impossible de charger le classement"))

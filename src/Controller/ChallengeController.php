@@ -70,6 +70,11 @@ final class ChallengeController extends AbstractController
         if (!$imageFile) {
             return new JsonResponse(['error' => 'Image manquante'], 400);
         }
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($imageFile->getMimeType(), $allowedMimeTypes)) {
+            return new JsonResponse(['error' => 'Seules les images sont acceptées (JPEG, PNG, GIF, WebP)'], 400);
+        }
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $slugger->slug($originalFilename);
         $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();

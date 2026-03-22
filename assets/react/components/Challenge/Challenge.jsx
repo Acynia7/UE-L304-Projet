@@ -66,10 +66,8 @@ export default function Challenge() {
     const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file || !uploadingId) return;
-
     const formData = new FormData();
     formData.append('image', file);
-
     try {
         const response = await fetch(`http://127.0.0.1:8000/api/challenges/submit/${uploadingId}`, {
             method: "POST",
@@ -78,13 +76,10 @@ export default function Challenge() {
 
         if (response.ok) {
             alert("Preuve envoyée !");
-            
-            // --- AJOUT ICI : On rafraîchit la liste pour déplacer le défi ---
             fetch("http://127.0.0.1:8000/api/challenges")
                 .then((res) => res.json())
                 .then((apiData) => {
                     setDefis(flattenDefis(apiData));
-                    // On change d'onglet automatiquement pour montrer que c'est en attente
                     setActiveTab("en_cours"); 
                 });
                 

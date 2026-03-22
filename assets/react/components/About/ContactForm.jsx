@@ -1,10 +1,7 @@
 import { useState } from "react";
 import './About.scss';
 
-
 export default function ContactForm() {
-
-
     const [nom, setNom] = useState("");
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");  
@@ -32,24 +29,22 @@ export default function ContactForm() {
                 body: JSON.stringify(contactData),
             });
 
-            const data = await response.json();
-
             if (response.ok) {
-                setStatus("success");
+                setStatus({ type: "success", text: "Message envoyé avec succès !" });
                 setNom("");
                 setEmail("");
                 setMessage("");
             } else {
-                setStatus("error");
-                console.error("Erreur API:", data.error);
+                const data = await response.json();
+                setStatus({ type: "error", text: data.error || "Erreur lors de l'envoi." });
             }
         } catch (error) {
-            setStatus("error");
-            console.error("Erreur réseau:", error);
+            setStatus({ type: "error", text: "Impossible de contacter le serveur." });
         } finally {
             setLoading(false);
         }
     };
+
     return (
         <section className="contact-section o-container--centered" id='contact-us'>
             <div className="contact-card">
@@ -91,8 +86,12 @@ export default function ContactForm() {
                             required
                         ></textarea>
                     </div>
-                    {status === "success" && <p style={{color: 'green', marginBottom: '10px'}}>Message envoyé avec succès !</p>}
-                    {status === "error" && <p style={{color: 'red', marginBottom: '10px'}}>Une erreur est survenue, réessaie plus tard.</p>}
+
+                    {status && (
+                        <p style={{ color: status.type === 'success' ? 'green' : 'red', marginBottom: '10px' }}>
+                            {status.text}
+                        </p>
+                    )}
 
                     <button 
                         type="submit" 

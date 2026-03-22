@@ -20,7 +20,7 @@ export default function Register() {
                 email: email,
                 password: password
             };
-            const response = await fetch("http://127.0.0.1:8000/api/register", {
+            const response = await fetch("/api/register", {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json" 
@@ -28,11 +28,10 @@ export default function Register() {
                 body: JSON.stringify(registrationData),
             });
 
-            const data = await response.json();
-
             if (response.ok) {
                 navigate("/login");
             } else {
+                const data = await response.json();
                 setError(data.error || "Échec de l'inscription");
             }
         } catch (err) {

@@ -9,7 +9,7 @@ export default function Profil() {
     const badges = mockBadges; // pas d'API badges pour l'instant
 
     useEffect(() => {
-        fetch("/api/profile")
+        fetch("/api/profile", { credentials: "include" })
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setProfile(apiData); })
             .catch(() => setError("Impossible de charger le profil"))

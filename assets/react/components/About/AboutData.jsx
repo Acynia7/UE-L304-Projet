@@ -5,7 +5,7 @@ export default function AboutData({...props}){
         <div className="about-data">
             <div className="about-data__container o-container--centered">
                 <div className="about-data__left">
-                    <div className="abou-data__span">
+                    <div className="about-data__span">
                         <span>NOTRE MISSION</span>
                     </div>
                     <div className="about-data__title">

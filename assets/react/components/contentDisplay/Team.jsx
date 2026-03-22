@@ -1,6 +1,3 @@
-import { IoMdContact } from "react-icons/io";
-
-
 export default function Team(){
     return(
         <div className="team">

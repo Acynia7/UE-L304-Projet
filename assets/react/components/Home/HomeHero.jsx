@@ -1,4 +1,4 @@
-import './home.scss';
+import './Home.scss';
 
 export default function HomeHero() {
     return (

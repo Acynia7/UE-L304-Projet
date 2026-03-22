@@ -18,7 +18,7 @@ export default function Dashboard() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch("/api/dashboard")
+        fetch("/api/dashboard", { credentials: "include" })
             .then((res) => (res.ok ? res.json() : null))
             .then((apiData) => { if (apiData) setData(apiData); })
             .catch(() => setError("Impossible de charger le tableau de bord"))

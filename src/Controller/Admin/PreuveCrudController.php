@@ -40,7 +40,11 @@ class PreuveCrudController extends AbstractCrudController
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if ($entityInstance instanceof Preuve) {
-            if ($entityInstance->getStatus() === 'VALIDE') {
+            $originalData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
+            $previousStatus = $originalData['status'] ?? null;
+            $newStatus = $entityInstance->getStatus();
+
+            if ($newStatus === 'VALIDE' && $previousStatus !== 'VALIDE') {
                 $user = $entityInstance->getUser();
                 $defi = $entityInstance->getDefi();
                 $user->setScoreTotal($user->getScoreTotal() + $defi->getPoint());
@@ -48,6 +52,15 @@ class PreuveCrudController extends AbstractCrudController
                 if ($user->getEquipe()) {
                     $equipe = $user->getEquipe();
                     $equipe->setScoreEquipe($equipe->getScoreEquipe() + $defi->getPoint());
+                }
+            } elseif ($previousStatus === 'VALIDE' && $newStatus !== 'VALIDE') {
+                $user = $entityInstance->getUser();
+                $defi = $entityInstance->getDefi();
+                $user->setScoreTotal($user->getScoreTotal() - $defi->getPoint());
+                $user->setTotalCO2($user->getTotalCO2() - $defi->getEconomieCO2());
+                if ($user->getEquipe()) {
+                    $equipe = $user->getEquipe();
+                    $equipe->setScoreEquipe($equipe->getScoreEquipe() - $defi->getPoint());
                 }
             }
         }

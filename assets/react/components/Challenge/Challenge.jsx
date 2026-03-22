@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { mockChallengeData } from "../../mockData";
 import "./Challenge.scss";
 
@@ -33,15 +33,23 @@ export default function Challenge() {
     const [defis, setDefis] = useState(flattenDefis(mockChallengeData));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [uploadingId, setUploadingId] = useState(null);
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
-        fetch("/api/challenges")
+        fetch("http://127.0.0.1:8000/api/challenges")
             .then((res) => (res.ok ? res.json() : null))
-            .then((apiData) => { if (apiData) setDefis(flattenDefis(apiData)); })
-            .catch(() => setError("Impossible de charger les defis"))
+            .then((apiData) => { 
+                if (apiData) setDefis(flattenDefis(apiData)); 
+            })
+            .catch(() => setError("Impossible de charger les défis"))
             .finally(() => setLoading(false));
     }, []);
 
+    const triggerFileInput = (challengeId) => {
+        setUploadingId(challengeId);
+        fileInputRef.current.click();
+    };
     const categories = ["all", ...new Set(defis.map((d) => d.categorie).filter(Boolean))];
 
     const defisFiltres = defis
@@ -54,11 +62,55 @@ export default function Challenge() {
         valide: defis.filter((d) => d.statut === "valide").length,
     };
 
+    // pour charger une image
+    const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !uploadingId) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/challenges/submit/${uploadingId}`, {
+            method: "POST",
+            body: formData,
+        });
+
+        if (response.ok) {
+            alert("Preuve envoyée !");
+            
+            // --- AJOUT ICI : On rafraîchit la liste pour déplacer le défi ---
+            fetch("http://127.0.0.1:8000/api/challenges")
+                .then((res) => res.json())
+                .then((apiData) => {
+                    setDefis(flattenDefis(apiData));
+                    // On change d'onglet automatiquement pour montrer que c'est en attente
+                    setActiveTab("en_cours"); 
+                });
+                
+        } else {
+            alert("Erreur lors de l'envoi");
+        }
+    } catch (err) {
+        alert("Erreur réseau");
+    } finally {
+        setUploadingId(null);
+        if (e.target) e.target.value = null;
+    }
+};
+
     if (loading) return <div className="challenge"><p>Chargement...</p></div>;
     if (error) return <div className="challenge"><p className="challenge__error">{error}</p></div>;
 
     return (
         <div className="challenge">
+            <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleUpload} 
+                accept="image/*" 
+                style={{ display: 'none' }} 
+            />
             {/* hero gradient */}
             <div className="challenge__hero">
                 <div className="challenge__hero-text">
@@ -135,9 +187,16 @@ export default function Challenge() {
                                     <span className="challenge__card-points">+{defi.points} pts</span>
                                     {defi.economieCO2 && <span className="challenge__card-co2">-{defi.economieCO2} kg CO2</span>}
                                 </div>
+                                {/* Action : Upload de preuve si "A faire" */}
                                 {defi.statut === "a_faire" && (
-                                    <button className="challenge__card-btn">Soumettre une preuve</button>
-                                )}
+                                <button 
+                                    className="challenge__card-btn"
+                                    onClick={() => triggerFileInput(defi.id)}
+                                    disabled={uploadingId === defi.id}
+                                >
+                                    {uploadingId === defi.id ? "Envoi..." : "Soumettre une preuve"}
+                                </button>
+                            )}
                             </div>
                         </div>
                     ))

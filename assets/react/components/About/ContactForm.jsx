@@ -1,6 +1,55 @@
+import { useState } from "react";
 import './About.scss';
 
+
 export default function ContactForm() {
+
+
+    const [nom, setNom] = useState("");
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");  
+    const [status, setStatus] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setStatus(null);
+
+        try {
+            const contactData = {
+                nom: nom,
+                email: email,
+                message: message,
+                sujet: "Contact via Site"
+            };
+
+            const response = await fetch("http://127.0.0.1:8000/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(contactData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setStatus("success");
+                setNom("");
+                setEmail("");
+                setMessage("");
+            } else {
+                setStatus("error");
+                console.error("Erreur API:", data.error);
+            }
+        } catch (error) {
+            setStatus("error");
+            console.error("Erreur réseau:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <section className="contact-section o-container--centered" id='contact-us'>
             <div className="contact-card">
@@ -12,18 +61,45 @@ export default function ContactForm() {
                     </p>
                 </div>
                 
-                <form className="contact-form">
+                <form className="contact-form" onSubmit={handleSubmit}>
                     <div className="contact-form__group">
-                        <input type="text" placeholder="Ton nom" className="contact-form__input" required />
+                        <input 
+                            type="text" 
+                            placeholder="Ton nom" 
+                            className="contact-form__input" 
+                            value={nom}
+                            onChange={(e) => setNom(e.target.value)}
+                            required 
+                        />
                     </div>
                     <div className="contact-form__group">
-                        <input type="email" placeholder="Ton email" className="contact-form__input" required />
+                        <input 
+                            type="email" 
+                            placeholder="Ton email" 
+                            className="contact-form__input" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required 
+                        />
                     </div>
                     <div className="contact-form__group">
-                        <textarea placeholder="Ton message" className="contact-form__input contact-form__textarea" required></textarea>
+                        <textarea 
+                            placeholder="Ton message" 
+                            className="contact-form__input contact-form__textarea" 
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            required
+                        ></textarea>
                     </div>
-                    <button type="submit" className="contact-form__button">
-                        Envoyer le message
+                    {status === "success" && <p style={{color: 'green', marginBottom: '10px'}}>Message envoyé avec succès !</p>}
+                    {status === "error" && <p style={{color: 'red', marginBottom: '10px'}}>Une erreur est survenue, réessaie plus tard.</p>}
+
+                    <button 
+                        type="submit" 
+                        className="contact-form__button"
+                        disabled={loading}
+                    >
+                        {loading ? "Envoi en cours..." : "Envoyer le message"}
                     </button>
                 </form>
             </div>
